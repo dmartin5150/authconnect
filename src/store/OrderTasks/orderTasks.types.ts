@@ -17,11 +17,11 @@ export type Provider = {
 export type User = {
     userId: number;
     userName: string;
-    notStarted:Metric;
-    pending:Metric;
-    completed:Metric;
+    notStarted:number;
+    pending:number;
+    completed:number;
     isAdmin:boolean;
-    groups: Group[];
+    groupIds: number[];
 }
 
 
@@ -53,30 +53,63 @@ type OrderAPIData = {
 }
 
 
+export enum AuthStatusType  {
+    NOT_STARTED = 'Not Started',
+    PENDING =  'Pending',
+    OBTAINED =  'Auth Obtained',
+    DENIED =  'Auth Denied',
+    PENDING_P2P = 'Pending P2P'
+}
+
+export enum ScheduleStatusType  {
+    NOT_SCHEDULED = 'Not Scheduled',
+    SCHEDULED =  'Scheduled',
+    OUTSIDE_FACILITY =  'Scheduled Outside Facility'
+}
+
+
+
 export type Order = {
-    apiData: OrderAPIData;
-    authStatus: 'Not Started' | 'Pending' | 'Auth Obtained' | 'Auth Denied' | 'Pending P2P';
-    scheduleStatus: 'Not Scheduled' | 'Scheduled' | 'Scheduled Outside Facility';
-    assignedUser: User;
-    lastUpdated:Date;
+    orderNumber: number;
+    orderDate: Date;
+    providerId: number;
+    carrier: string;
+    priority: boolean;
+    departmentId: number;
+    patientId: number;
+    authStatus: AuthStatusType
+    scheduleStatus: ScheduleStatusType
+    assignedUserId: number;
+    lastUpdated:Date | null;
     notes: ActionNote[]
+}
+
+
+export enum MetricStatus {
+    NOT_STARTED = 'Not Started',
+    PENDING =  'Pending',
+    COMPLETED =  'Completed',
+    NOT_SCHEDULED = 'Not Scheduled',
+    SCHEDULED =  'Scheduled',
+    OUTSIDE_FACILITY =  'Scheduled Outside Facility'
 }
 
 
 
 export type Metric = {
-    name: 'Not Started' | 'Pending' | 'Completed' | 'Scheduled' | 'Not Scheduled' | 'Scheduled Outside Facility';
+    name: MetricStatus;
     count: number;
 }
 
 export type Group = {
     groupId: number;
-    provider: Provider[];
-    user: User[];
-    department:Department[];
-    notStarted: Metric;
-    pending: Metric;
-    completed: Metric;
-    scheduled: Metric
-
+    groupName:string;
+    providerIds: number[];
+    userIds: number[];
+    departmentIds:number[];
+    notStarted: number;
+    pending: number;
+    completed: number;
+    scheduled: number;
 }
+

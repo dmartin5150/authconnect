@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
+import { Order } from '../store/OrderTasks/orderTasks.types';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
@@ -14,11 +15,6 @@ type Car = {
     price: number;
 }
 
-const carArray: Car[] = [ 
-    {make: 'Ford', model: 'Shelby', price:50000},
-    {make: 'Ford', model: 'Mustang', price:35000},
-    {make: 'Chevy', model: 'Camaro', price:40000},
-]
 const MyTasks = () => {
 
 
@@ -26,7 +22,7 @@ const MyTasks = () => {
         console.log(authStatus)
     }
 
-    const [rowData, setRowData] = useState<Car[]>(carArray);
+    const [rowData, setRowData] = useState<Car[]>([]);
 
     const [columnDefs, setColDefs]=  useState<ColDef[]> ([
         {field: 'make'},

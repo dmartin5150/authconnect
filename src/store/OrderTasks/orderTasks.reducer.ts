@@ -1,7 +1,8 @@
 
-import { User, Order, Group} from "./orderTasks.types";
+import { User, Order, Group, MetricStatus} from "./orderTasks.types";
 import { setUserOrders, setUser, setGroup } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
+import { UNASSIGNED_USER } from "../../Data/userData";
 
 
 export type OrderTaskState = {
@@ -10,15 +11,7 @@ export type OrderTaskState = {
     group: Group | {};
 }
 
-const UNASSIGNED_USER: User = {
-    userId: 0,
-    userName:'Unassigned',
-    notStarted: {name: 'Not Started', count:0},
-    pending: {name: 'Pending', count:0},
-    completed: {name: 'Completed', count:0},
-    isAdmin: false,
-    groups: []
-}
+
 
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
     orders: [],
