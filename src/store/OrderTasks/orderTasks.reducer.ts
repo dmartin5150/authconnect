@@ -3,7 +3,7 @@ import { User, Order, Group, MetricStatus} from "./orderTasks.types";
 import { setUserOrders, setUser, setGroup } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
 import { UNASSIGNED_USER } from "../../Data/userData";
-
+import { ORDERS } from "../../Data/orderData";
 
 export type OrderTaskState = {
     orders: Order[];
@@ -14,7 +14,7 @@ export type OrderTaskState = {
 
 
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
-    orders: [],
+    orders: ORDERS,
     user:UNASSIGNED_USER,
     group: {}
 }

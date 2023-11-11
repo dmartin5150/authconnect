@@ -1,0 +1,9 @@
+.note-button {
+    height: 20px;
+    width: 20px;
+
+    .note-button-png {
+        height:100%;
+        width:100%;
+    }
+}

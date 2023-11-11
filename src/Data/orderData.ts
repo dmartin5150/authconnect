@@ -2,21 +2,14 @@ import { Order } from "../store/OrderTasks/orderTasks.types";
 import { AuthStatusType, ScheduleStatusType } from "../store/OrderTasks/orderTasks.types";
 
 
-
-// export type Order = {
-//     orderNumber: number;
-//     orderDate: Date;
-//     providerId: number;
-//     carrier: string;
-//     priority: boolean;
-//     departmentId: number;
-//     patientId: number;
-//     authStatus: AuthStatusType
-//     scheduleStatus: ScheduleStatusType
-//     assignedUserId: number;
-//     lastUpdated:Date;
-//     notes: ActionNote[]
-// }
-const ORDER: Order[] = [ 
-    {orderNumber:1, orderDate:new Date('2023-11-01'),providerId:7, carrier:'Aetna', priority:false, departmentId:2,patientId:11111111,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+export const ORDERS: Order[] = [ 
+    {orderNumber:1, orderName:'MRI Brain', orderDate:new Date('2023-11-01'),providerId:7,patientName:'', carrier:'Aetna', priority:false, departmentId:2,patientId:11111111,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:2, orderName:'Echo', orderDate:new Date('2023-11-02'),providerId:1,patientName:'', carrier:'Aetna', priority:false, departmentId:1,patientId:11111112,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:3, orderName:'CT Brain', orderDate:new Date('2023-11-02'),providerId:2, patientName:'',carrier:'BC BS', priority:false, departmentId:1,patientId:11111113,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:4, orderName:'MRI Lumbar Spine', orderDate:new Date('2023-11-03'),providerId:7, patientName:'', carrier:'BC BS', priority:false, departmentId:3,patientId:11111113,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:5, orderName:'Xray Hand', orderDate:new Date('2023-11-03'),providerId:3, patientName:'', carrier:'Medicare', priority:false, departmentId:4,patientId:11111114,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:6, orderName:'MRI Brain', orderDate:new Date('2023-11-05'),providerId:4, patientName:'',carrier:'Medicare', priority:false, departmentId:3,patientId:11111115,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:7, orderName:'CT Sinuses', orderDate:new Date('2023-11-07'),providerId:5, patientName:'',carrier:'SmartHealth', priority:false, departmentId:1,patientId:11111115,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:8, orderName:'Carotid Duplex', orderDate:new Date('2023-11-09'),providerId:6, patientName:'',carrier:'SmartHealth', priority:false, departmentId:2,patientId:11111112,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
+    {orderNumber:9, orderName:'CT Brain', orderDate:new Date('2023-11-09'),providerId:7,patientName:'', carrier:'Medicaid', priority:false, departmentId:3,patientId:11111116,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null, notes:[]},
 ]

@@ -14,6 +14,8 @@ export type Provider = {
     Specialty: string;
 }
 
+
+
 export type User = {
     userId: number;
     userName: string;
@@ -71,6 +73,7 @@ export enum ScheduleStatusType  {
 
 export type Order = {
     orderNumber: number;
+    orderName: string;
     orderDate: Date;
     providerId: number;
     carrier: string;
@@ -81,7 +84,8 @@ export type Order = {
     scheduleStatus: ScheduleStatusType
     assignedUserId: number;
     lastUpdated:Date | null;
-    notes: ActionNote[]
+    notes: ActionNote[];
+    patientName:string;
 }
 
 

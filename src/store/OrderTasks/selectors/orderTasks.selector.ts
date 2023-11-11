@@ -7,7 +7,7 @@ import { OrderTaskState } from "../orderTasks.reducer";
 const selectOrderTaskReducer = (state:RootState):OrderTaskState => state.orderTask;
 
 
-export const selectUserOrders = createSelector(
+export const selectOrders = createSelector(
     [selectOrderTaskReducer],
     (orderTaskSlice) => orderTaskSlice.orders
 );
