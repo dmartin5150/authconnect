@@ -1,5 +1,8 @@
 
 
+export enum  ORDATA_TYPES {
+    GET_USER_ORDERS  = 'orderTasks/GET_USER_ORDERS',
+}
 
 export type Provider = {
     id: number;
@@ -12,6 +15,9 @@ export type Provider = {
 export type User = {
     userId: number;
     userName: string;
+    notStarted:Metric,
+    pending:Metric,
+    completed:Metric
 }
 
 
