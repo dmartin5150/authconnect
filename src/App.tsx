@@ -1,25 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Routes, Route } from "react-router-dom";
+import Admin from './views/Admin';
+import GroupTasks from './views/GroupTasks';
+import MyTasks from './views/MyTasks';
+import Metrics from './views/Metrics';
+import Navigation from './routes/navigation/navigation.component';
+
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className='app'>
+    <Routes>
+      <Route path="/" element={<Navigation />}>
+        <Route path="/" element={<MyTasks />}></Route>
+        <Route path="/GroupTasks" element={<GroupTasks />}></Route>
+        <Route path="/Admin" element={<Admin />}></Route>
+        <Route path="/Metrics" element={<Metrics />}></Route>
+      </Route>
+    </Routes>
+  </div>
   );
 }
 
