@@ -27,7 +27,7 @@ const Navigation = () => {
                 :{}
                 )}
             to="/" end>My Tasks</NavLink>
-         <NavLink  
+         <NavLink   className="nav__link"
               style={
               ({isActive}) => (
                 isActive 
@@ -38,10 +38,10 @@ const Navigation = () => {
                 :{}
                 )
               }
-          to="/Admin" className="nav__link">
+          to="/Admin">
             Admin
           </NavLink>
-          <NavLink  
+          <NavLink  className="nav__link"
               style={
               ({isActive}) => (
                 isActive 
@@ -52,7 +52,7 @@ const Navigation = () => {
                 :{}
                 )
               }
-          to="/Metrics" className="nav__link">
+          to="/Metrics" >
             Metrics
           </NavLink>
         </div> 
