@@ -17,9 +17,11 @@ export type Provider = {
 export type User = {
     userId: number;
     userName: string;
-    notStarted:Metric,
-    pending:Metric,
-    completed:Metric
+    notStarted:Metric;
+    pending:Metric;
+    completed:Metric;
+    isAdmin:boolean;
+    groups: Group[];
 }
 
 
@@ -40,17 +42,21 @@ export type Patient = {
     athenaId: number;
 }
 
-
-export type Order = {
+type OrderAPIData = {
     orderNumber: number;
     orderDate: Date;
     orderProvider: Provider;
     carrier: string;
-    authStatus: 'Not Started' | 'Pending' | 'Auth Obtained' | 'Auth Denied' | 'Pending P2P';
-    scheduleStatus: 'Not Scheduled' | 'Scheduled' | 'Scheduled Outside Facility';
     priority: boolean;
     department: Department;
     patient: Patient;
+}
+
+
+export type Order = {
+    apiData: OrderAPIData;
+    authStatus: 'Not Started' | 'Pending' | 'Auth Obtained' | 'Auth Denied' | 'Pending P2P';
+    scheduleStatus: 'Not Scheduled' | 'Scheduled' | 'Scheduled Outside Facility';
     assignedUser: User;
     lastUpdated:Date;
     notes: ActionNote[]
@@ -59,17 +65,18 @@ export type Order = {
 
 
 export type Metric = {
-    name: 'Not Started' | 'Pending' | 'Completed';
-    count: number
+    name: 'Not Started' | 'Pending' | 'Completed' | 'Scheduled' | 'Not Scheduled' | 'Scheduled Outside Facility';
+    count: number;
 }
 
 export type Group = {
     groupId: number;
-    provider: Provider;
-    user: User;
-    department:Department;
+    provider: Provider[];
+    user: User[];
+    department:Department[];
     notStarted: Metric;
     pending: Metric;
     completed: Metric;
+    scheduled: Metric
 
 }

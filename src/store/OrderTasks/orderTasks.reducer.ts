@@ -15,7 +15,9 @@ const UNASSIGNED_USER: User = {
     userName:'Unassigned',
     notStarted: {name: 'Not Started', count:0},
     pending: {name: 'Pending', count:0},
-    completed: {name: 'Completed', count:0}
+    completed: {name: 'Completed', count:0},
+    isAdmin: false,
+    groups: []
 }
 
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
