@@ -1,7 +1,9 @@
 
 
 export enum  ORDATA_TYPES {
-    GET_USER_ORDERS  = 'orderTasks/GET_USER_ORDERS',
+    SET_USER_ORDERS  = 'orderTasks/SET_USER_ORDERS',
+    SET_USER = 'orderTasks/SET_USER',
+    SET_GROUP = 'orderTasks/SET_GROUP'
 }
 
 export type Provider = {

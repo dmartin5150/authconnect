@@ -1,12 +1,13 @@
 
-import { User, Order} from "./orderTasks.types";
-import { getUserOrders } from "./actions/orderTasks.actions";
+import { User, Order, Group} from "./orderTasks.types";
+import { setUserOrders, setUser, setGroup } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
 
 
 export type OrderTaskState = {
     orders: Order[];
     user: User;
+    group: Group | {};
 }
 
 const UNASSIGNED_USER: User = {
@@ -19,12 +20,19 @@ const UNASSIGNED_USER: User = {
 
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
     orders: [],
-    user:UNASSIGNED_USER
+    user:UNASSIGNED_USER,
+    group: {}
 }
 
 export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {
-    if (getUserOrders.match(action)) {
+    if (setUserOrders.match(action)) {
         return { ...state, orders: action.payload}
+    }
+    if (setUser.match(action)) {
+        return { ...state, user: action.payload}
+    }
+    if (setGroup.match(action)) {
+        return { ...state, group: action.payload}
     }
     return state;
 }

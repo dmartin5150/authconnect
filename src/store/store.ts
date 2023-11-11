@@ -16,4 +16,5 @@ const composedEnhancers = compose(applyMiddleware(...middleWares))
 export const store = createStore(rootReducer,undefined,composedEnhancers)
 
 export type RootState = ReturnType<typeof rootReducer>
-export type AppDispatch = Dispatch<AnyAction> & ThunkDispatch<RootState, null, AnyAction> 
+// export type AppDispatch = Dispatch<AnyAction> & ThunkDispatch<RootState, null, AnyAction> 
+export type AppDispatch = Dispatch<AnyAction>  
