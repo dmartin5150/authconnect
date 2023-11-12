@@ -73,20 +73,21 @@ const MyTasks = () => {
     },[statusUpdate])
 
     useEffect(() => {
-        const notStarted = curOrders.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
-        const pending = curOrders.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+        const userFilter = curOrders.filter((order) => order.assignedUserId === curUser.userId)
+        const notStarted = userFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = userFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
                                             order.authStatus === AuthStatusType.PENDING_P2P);
-        const completed =  curOrders.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+        const completed =  userFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
                                             order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
-        const scheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+        const scheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED);
-        const notScheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+        const notScheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
         setNotStarted(notStarted.length);
         setPending(pending.length);
         setCompleted(completed.length);
         setScheduled(scheduled.length);
         setNotScheduled(notScheduled.length);
-    },[statusUpdate])
+    },[statusUpdate,curUser])
 
 
 
