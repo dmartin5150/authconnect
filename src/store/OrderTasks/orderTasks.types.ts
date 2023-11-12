@@ -23,9 +23,6 @@ export type Provider = {
 export type User = {
     userId: number;
     userName: string;
-    notStarted:number;
-    pending:number;
-    completed:number;
     isAdmin:boolean;
     groupIds: number[];
 }
@@ -144,9 +141,5 @@ export type Group = {
     providerIds: number[];
     userIds: number[];
     departmentIds:number[];
-    notStarted: number;
-    pending: number;
-    completed: number;
-    scheduled: number;
 }
 

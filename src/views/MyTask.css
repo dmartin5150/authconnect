@@ -24,6 +24,7 @@
 
             .status-heading.selected {
                 color: blue;
+                text-decoration: underline;
             }
 
         } 
