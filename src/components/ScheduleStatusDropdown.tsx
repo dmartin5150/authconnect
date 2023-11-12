@@ -1,27 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { ScheduleStatusType } from '../store/OrderTasks/orderTasks.types';
 import { ICellRendererParams} from "ag-grid-community";
 
 export interface ScheduleStatusDropdownProps {
-    onScheduleChange: (rowIndex: number, authStatus:ScheduleStatusType) => void
+    onScheduleChange: (orderId: number, authStatus:ScheduleStatusType) => void
 }
 
 
 const ScheduleStatsDropdown: React.FC<ScheduleStatusDropdownProps> = ({onScheduleChange, ...props}) =>  {
     const[scheduleStatus, setScheduleStatus] = useState<ScheduleStatusType>(ScheduleStatusType.NOT_SCHEDULED)
 
+
+    useEffect (()=> {
+        setScheduleStatus((props as ICellRendererParams).data.scheduleStatus);
+    },[(props as ICellRendererParams).data.schedulingStatus])
+
+
     const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
-        const rowIndex = (props as ICellRendererParams).node.rowIndex;
-        if (!rowIndex) {
-            if (rowIndex === 0) {
-                setScheduleStatus(event.target.value as ScheduleStatusType);
-                onScheduleChange(rowIndex, event.target.value as ScheduleStatusType)
-            }
-        } else {
-            setScheduleStatus(event.target.value as ScheduleStatusType);
-            onScheduleChange(rowIndex, event.target.value as ScheduleStatusType)
-        }
-       
+        const orderId = (props as ICellRendererParams).data.id;
+        setScheduleStatus(event.target.value as ScheduleStatusType);
+        onScheduleChange(orderId, event.target.value as ScheduleStatusType);
     }
     return(
         <div>

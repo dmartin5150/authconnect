@@ -19,6 +19,7 @@ import ViewHistory from '../components/ViewHistory';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import CreateNote from '../components/CreateNote';
+import classnames from "classnames";
 
 
 const MyTasks = () => {
@@ -32,59 +33,102 @@ const MyTasks = () => {
     const dispatch = useDispatch();
 
 
+    const enum SelectedHeadings {
+        NOT_STARTED ='Not Started',
+        PENDING = 'Pending',
+        COMPLETED = 'Completed',
+        NOT_SCHEDULED = 'Not Scheduled',
+        SCHEDULED = 'Scheduled'
+
+    }
+
+    const [selectedHeading, setSelectedHeading] = useState<SelectedHeadings>(SelectedHeadings.NOT_STARTED);
+
+
+
+
 
     useEffect(() => {
-        if (statusUpdate.rowIndex !== -1){
-            const orderId = curOrders[statusUpdate.rowIndex].id;
+        if (statusUpdate.orderId !== -1){
             const now = new Date();
             const note = `Order ${statusUpdate.type} Status changed to ${statusUpdate.status}`;
-            const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now};
-            console.log('action notes', actionNotes);
+            const newNote:ActionNote = {orderId: statusUpdate.orderId, userName:curUser.userName, data:note, timeStamp:now};
+            // console.log('action notes', actionNotes);
             dispatch(setActionNotes([...actionNotes, newNote]))
-            const newOrder = curOrders[statusUpdate.rowIndex]
+            const orderIndex = curOrders.findIndex((order) => order.id === statusUpdate.orderId)
+            if (orderIndex === -1) {
+                return;
+            }
+            const newOrders = [...curOrders];
+            const filteredOrders = newOrders.filter((order) => order.id !== statusUpdate.orderId);
+            const newOrder = curOrders[orderIndex]
             newOrder.lastUpdated = now;
-            dispatch(setOrders([...curOrders, newOrder]));
+            dispatch(setOrders([...filteredOrders, newOrder]));
         }
     },[statusUpdate])
 
-    
-    // const createActionNote = (authType:string, rowIndex:number, newStatus: AuthStatusType | ScheduleStatusType) => {
-    //     const orderId = curOrders[rowIndex].id;
-    //     const now = new Date();
-    //     const note = `Order ${authType} Status changed to ${newStatus}`;
-    //     const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now};
-    //     console.log('action notes', actionNotes);
-    //     dispatch(setActionNotes([...actionNotes, newNote]))
-    //     const newOrder = curOrders[rowIndex]
-    //     newOrder.lastUpdated = now;
-    //     dispatch(setOrders([...curOrders, newOrder]));
-    // }
 
+    useEffect(()=> {
+        const notStarted = curOrders.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = curOrders.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+                                            order.authStatus === AuthStatusType.PENDING_P2P);
+        const completed =  curOrders.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+                                            order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
+        const scheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+                                            order.scheduleStatus === ScheduleStatusType.SCHEDULED);
+        const notScheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+
+        if (selectedHeading === SelectedHeadings.NOT_STARTED) {
+            setRowData(notStarted);
+        } else if (selectedHeading === SelectedHeadings.PENDING) {
+            setRowData(pending);
+        } else if (selectedHeading === SelectedHeadings.COMPLETED) {
+            setRowData(completed);
+        }else if (selectedHeading === SelectedHeadings.SCHEDULED) {
+            setRowData(scheduled);
+        } else {
+            setRowData(notScheduled);
+        }
+
+
+    },[selectedHeading, curOrders])
     
-    const onAuthChange = (rowIndex: number, authStatus:AuthStatusType) => {
-        const curOrder = curOrders[rowIndex];
-        curOrder.authStatus = authStatus;
-        dispatch(setOrders([...curOrders, curOrder]));
-        const newStatus:StatusUpdateInfo = {rowIndex,type:StatusUpdateTypes.AUTH,status:authStatus}
+    const onAuthChange = (orderId: number, authStatus:AuthStatusType) => {
+        const orderIndex = curOrders.findIndex((order) => order.id === orderId)
+        if (orderIndex === -1) {
+            return 
+        }
+        console.log('orderIndex', orderIndex)
+        const newOrder = curOrders[orderIndex]
+        const newOrders = [...curOrders];
+        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
+        newOrder.authStatus = authStatus;
+        dispatch(setOrders([...filteredOrders, newOrder]));
+        const newStatus:StatusUpdateInfo = {orderId,type:StatusUpdateTypes.AUTH,status:authStatus}
         dispatch(setStatusUpdate(newStatus))
     }
 
-    const onScheduleChange = (rowIndex: number, schedulingStatus:ScheduleStatusType) => {
-        const curOrder = curOrders[rowIndex];
-        curOrder.scheduleStatus = schedulingStatus;
-        dispatch(setOrders([...curOrders, curOrder]));
-        const newStatus:StatusUpdateInfo = {rowIndex,type:StatusUpdateTypes.AUTH,status:schedulingStatus}
+    const onScheduleChange = (orderId: number, schedulingStatus:ScheduleStatusType) => {
+        const orderIndex = curOrders.findIndex((order) => order.id === orderId)
+        if (orderIndex === -1) {
+            return 
+        }
+        const newOrder = curOrders[orderIndex]
+        const newOrders = [...curOrders];
+        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
+        newOrder.scheduleStatus = schedulingStatus;
+        dispatch(setOrders([...filteredOrders, newOrder]));
+        const newStatus:StatusUpdateInfo = {orderId,type:StatusUpdateTypes.AUTH,status:schedulingStatus}
         dispatch(setStatusUpdate(newStatus))
     }
 
-    const onAddNote = (rowIndex: number, actionNote:ActionNote) => {
-        console.log('row index', rowIndex, 'note', actionNote);
-        const noteInfo:CreateNoteInfo = {rowIndex,classIsOpen:true};
+    const onAddNote = (orderId: number, actionNote:ActionNote) => {
+        const noteInfo:CreateNoteInfo = {orderId,classIsOpen:true};
         dispatch(setCreateNoteOpen(noteInfo));
     }
 
-    const onAddViewHistory = (rowIndex:number) => {
-        const viewInfo:ViewNoteInfo = {rowIndex,classIsOpen:true};
+    const onAddViewHistory = (orderId:number) => {
+        const viewInfo:ViewNoteInfo = {orderId,classIsOpen:true};
         dispatch(setViewNotes(viewInfo)); 
     }
 
@@ -139,7 +183,7 @@ const MyTasks = () => {
 
     useEffect(() => {
         if (gridApi) {
-            console.log('resizing columns')
+            // console.log('resizing columns')
           gridApi.sizeColumnsToFit();
         }
       }, [gridApi]);
@@ -149,7 +193,18 @@ const MyTasks = () => {
 
     return (
         <div className='ag-theme-alpine' style={{height: '500px'}}>
-            <h1>MyTasks Page</h1>
+            <div className='status-headings'>
+                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_STARTED) ? 'selected' : ''})}
+                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started (0)</h4>
+                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.PENDING) ? 'selected' : ''})}  
+                    onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending (0)</h4>
+                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.COMPLETED) ? 'selected' : ''})} 
+                    onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed (0)</h4>
+                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_SCHEDULED) ? 'selected' : ''})} 
+                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled (0)</h4>
+                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.SCHEDULED) ? 'selected' : ''})} 
+                    onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled (0)</h4>
+            </div>
             {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}
             <AgGridReact 

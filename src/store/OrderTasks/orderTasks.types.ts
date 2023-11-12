@@ -111,13 +111,13 @@ export enum MetricStatus {
 
 
 export type CreateNoteInfo = {
-    rowIndex:number;
+    orderId:number;
     classIsOpen:boolean;
 }
 
 
 export type ViewNoteInfo = {
-    rowIndex:number;
+    orderId:number;
     classIsOpen:boolean;
 }
 
@@ -127,7 +127,7 @@ export enum StatusUpdateTypes  {
 }
 
 export type StatusUpdateInfo = {
-    rowIndex:number;
+    orderId:number;
     status:AuthStatusType | ScheduleStatusType;
     type: StatusUpdateTypes
 }

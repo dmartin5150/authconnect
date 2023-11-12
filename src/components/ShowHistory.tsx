@@ -10,6 +10,7 @@ import { ActionNote, ViewNoteInfo } from "../store/OrderTasks/orderTasks.types";
 import {useSelector, useDispatch} from 'react-redux';
 import { selectActionNotes, selectOrders, selectViewNotes } from "../store/OrderTasks/selectors/orderTasks.selector";
 import { setViewNotes } from "../store/OrderTasks/actions/orderTasks.actions";
+import { ICellRendererParams} from "ag-grid-community";
 import './ShowHistory.css';
 
 interface ShowHistoryProps {
@@ -17,7 +18,7 @@ interface ShowHistoryProps {
 }
 
 
-const ShowHistory: React.FC<ShowHistoryProps> = ({classIsOpen}) => {
+const ShowHistory: React.FC<ShowHistoryProps> = ({classIsOpen, ...props}) => {
 
     const viewNotes = useSelector(selectViewNotes);
     const orders = useSelector(selectOrders);
@@ -26,7 +27,7 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({classIsOpen}) => {
 
     const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const emptyViewNoteInfo :ViewNoteInfo = {rowIndex:-1, classIsOpen:false}
+        const emptyViewNoteInfo :ViewNoteInfo = {orderId:-1, classIsOpen:false}
         dispatch(setViewNotes(emptyViewNoteInfo));
     }
 
@@ -42,9 +43,8 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({classIsOpen}) => {
 
 
     useEffect  (() => {
-        const orderId = orders[viewNotes.rowIndex].id;
+        const orderId = (props as ICellRendererParams).data.id;
         const curActionNotes = actionNotes.filter((note) =>  note.orderId === orderId);
-        console.log('action notes', curActionNotes)
         setRowData(curActionNotes);
     },[orders, actionNotes]);
 

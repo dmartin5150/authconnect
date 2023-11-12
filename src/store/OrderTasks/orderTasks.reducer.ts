@@ -21,10 +21,10 @@ const OR_DATA_INITIAL_STATE: OrderTaskState = {
     orders: ORDERS,
     user:UNASSIGNED_USER,
     group: {},
-    createNoteOpen:{rowIndex: -1, classIsOpen:false},
-    viewNotes:{rowIndex: -1, classIsOpen:false},
+    createNoteOpen:{orderId: -1, classIsOpen:false},
+    viewNotes:{orderId: -1, classIsOpen:false},
     notes:[],
-    statusUpdate: {rowIndex:-1, status:AuthStatusType.NOT_STARTED, type:StatusUpdateTypes.AUTH }
+    statusUpdate: {orderId:-1, status:AuthStatusType.NOT_STARTED, type:StatusUpdateTypes.AUTH }
 }
 
 export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {

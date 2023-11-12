@@ -5,7 +5,7 @@ import { CreateNoteInfo } from "../store/OrderTasks/orderTasks.types";
 
 
 interface AddNoteProps {
-    onAddNote: (rowIndex:number, noteInfo:CreateNoteInfo) => void;
+    onAddNote: (orderId:number, noteInfo:CreateNoteInfo) => void;
 }
 
 
@@ -13,16 +13,9 @@ const AddNote: React.FC<AddNoteProps> = ({onAddNote, ...props}) => {
 
 
     const handleAddNote = (event:React.MouseEvent<HTMLButtonElement>) => {
-        const rowIndex = (props as ICellRendererParams).node.rowIndex;
-        if (!rowIndex) {
-            if (rowIndex === 0) {
-                const noteInfo:CreateNoteInfo = {rowIndex:rowIndex, classIsOpen:true};
-                onAddNote(rowIndex, noteInfo)
-            }
-        } else {
-            const noteInfo:CreateNoteInfo = {rowIndex:rowIndex, classIsOpen:true};
-            onAddNote(rowIndex, noteInfo)
-        }
+        const orderId = (props as ICellRendererParams).data.id;
+        const noteInfo:CreateNoteInfo = {orderId, classIsOpen:true};
+        onAddNote(orderId, noteInfo)
     }
 
     return (

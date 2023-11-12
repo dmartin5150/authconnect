@@ -6,24 +6,16 @@ import "./ViewHistory.css";
 
 
 interface AddNoteProps {
-    onAddViewHistory: (rowIndex:number, viwInfo:ViewNoteInfo) => void;
+    onAddViewHistory: (orderId:number, viwInfo:ViewNoteInfo) => void;
 }
 
 const ViewHistory: React.FC<AddNoteProps> = ({onAddViewHistory, ...props}) => {
 
 
     const handleClick = (event:React.MouseEvent<HTMLButtonElement>) => {
-        // console.log('clicked')
-        const rowIndex = (props as ICellRendererParams).node.rowIndex;
-        if (!rowIndex) {
-            if (rowIndex === 0) {
-                const viewInfo:ViewNoteInfo = {rowIndex:rowIndex, classIsOpen:true};
-                onAddViewHistory(rowIndex, viewInfo)
-            }
-        } else {
-            const viewInfo:ViewNoteInfo = {rowIndex:rowIndex, classIsOpen:true};
-            onAddViewHistory(rowIndex, viewInfo)
-        }
+        const orderId = (props as ICellRendererParams).data.id;
+        const viewInfo:ViewNoteInfo = {orderId, classIsOpen:true};
+        onAddViewHistory(orderId, viewInfo)
     }
 
     return (

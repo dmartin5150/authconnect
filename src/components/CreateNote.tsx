@@ -7,6 +7,7 @@ import { setCreateNoteOpen, setActionNotes, setOrders} from '../store/OrderTasks
 import { CreateNoteInfo } from '../store/OrderTasks/orderTasks.types';
 import { selectUser,selectOrders,selectActionNotes,selectCreateNoteOpen } from '../store/OrderTasks/selectors/orderTasks.selector';
 import { User,ActionNote } from '../store/OrderTasks/orderTasks.types';
+import { ICellRendererParams} from "ag-grid-community";
 
 
 
@@ -17,7 +18,7 @@ interface CreateNoteProps {
 
 
 
-const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen}) => {
+const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
 
     const [note, setNote] = useState('');
     const dispatch = useDispatch();
@@ -27,13 +28,19 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen}) => {
     const noteInfo = useSelector(selectCreateNoteOpen)
 
     const createActionNote = () => {
-        const orderId = curOrders[noteInfo.rowIndex].id;
+        const orderId = (props as ICellRendererParams).data.id;
         const now = new Date();
         const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now}
         dispatch(setActionNotes([...actionNotes, newNote]))
-        const newOrder = curOrders[noteInfo.rowIndex];
+        const orderIndex = curOrders.findIndex((order) => order.id === orderId);
+        if (orderIndex === -1) {
+            return 
+        }
+        const newOrder = curOrders[orderIndex];
+        const newOrders = [...curOrders]
+        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
         newOrder.lastUpdated = now;
-        dispatch(setOrders([...curOrders, newOrder]));
+        dispatch(setOrders([...filteredOrders, newOrder]));
     }
 
 
@@ -44,7 +51,7 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen}) => {
             return
         }
         createActionNote();
-        const cancelledNote:CreateNoteInfo = {rowIndex:-1, classIsOpen:false}
+        const cancelledNote:CreateNoteInfo = {orderId:-1, classIsOpen:false}
         dispatch(setCreateNoteOpen(cancelledNote));
         console.log('Submitting note')
     }
@@ -54,7 +61,7 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen}) => {
     }
 
     const handleCancel = () => {
-        const cancelledNote:CreateNoteInfo = {rowIndex:-1, classIsOpen:false}
+        const cancelledNote:CreateNoteInfo = {orderId:-1, classIsOpen:false}
         dispatch(setCreateNoteOpen(cancelledNote));
     } 
 

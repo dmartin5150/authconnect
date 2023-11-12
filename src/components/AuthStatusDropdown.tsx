@@ -1,27 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { AuthStatusType } from '../store/OrderTasks/orderTasks.types';
 import { ICellRendererParams} from "ag-grid-community";
 
 export interface AuthStatusDropdownProps {
-    onAuthChange: (rowIndex: number, authStatus:AuthStatusType) => void,
+    onAuthChange: (orderId: number, authStatus:AuthStatusType) => void,
 }
 
 const AuthStatsDropdown: React.FC<AuthStatusDropdownProps> = ({onAuthChange, ...props}) =>
   {
     const[authStatus, setAuthStatus] = useState<AuthStatusType>(AuthStatusType.NOT_STARTED)
 
-    const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
-        const rowIndex = (props as ICellRendererParams).node.rowIndex;
-        if (!rowIndex) {
-            if (rowIndex === 0) {
-                onAuthChange(rowIndex, event.target.value as AuthStatusType);
-                setAuthStatus(event.target.value as AuthStatusType);
-            }
-        } else {
-            onAuthChange(rowIndex, event.target.value as AuthStatusType);
-            setAuthStatus(event.target.value as AuthStatusType);
-        }
 
+    useEffect (()=> {
+        setAuthStatus((props as ICellRendererParams).data.authStatus);
+    },[(props as ICellRendererParams).data.authStatus])
+
+
+    const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
+        const orderId = (props as ICellRendererParams).data.id;
+        onAuthChange(orderId, event.target.value as AuthStatusType);
+        setAuthStatus(event.target.value as AuthStatusType);
     }
     return(
         <div>
