@@ -1,26 +1,43 @@
-import React, {useState, useEffect, useRef, useMemo} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import { AgGridReact } from 'ag-grid-react';
-import { GridApi, GridReadyEvent, CellClickedEvent,CellValueChangedEvent, RowDataUpdatedEvent, ComponentStateChangedEvent, GetRowIdParams } from "ag-grid-community";
+import { GridApi} from "ag-grid-community";
 import { ColDef } from 'ag-grid-community';
-import { Order, Patient } from '../store/OrderTasks/orderTasks.types';
+import { Order, Patient, ScheduleStatusType } from '../store/OrderTasks/orderTasks.types';
 import { useSelector } from "react-redux";
 import {selectOrders } from "../store/OrderTasks/selectors/orderTasks.selector" 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./MyTask.css";
 import { PATIENTS } from '../Data/patientData';
+import { AuthStatusType } from '../store/OrderTasks/orderTasks.types';
 
 import AuthStatsDropdown from '../components/AuthStatusDropdown';
 import AddNote from '../components/AddNote';
 import NoteHistory from '../components/NoteHistory';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
+import { setOrders } from '../store/OrderTasks/actions/orderTasks.actions';
 
 
 const MyTasks = () => {
 
+    const curOrders = useSelector(selectOrders);
+    const dispatch = useDispatch();
 
-    const onAuthChange = (authStatus:string) => {
-        console.log('AUTH CHANGE')
+
+
+    
+    const onAuthChange = (rowIndex: number, authStatus:AuthStatusType) => {
+        const curOrder = curOrders[rowIndex];
+        curOrder.authStatus = authStatus;
+        dispatch(setOrders([...curOrders, curOrder]));
+    }
+
+    const onScheduleChange = (rowIndex: number, schedulingStatus:ScheduleStatusType) => {
+        console.log('rI', rowIndex, schedulingStatus);
+        const curOrder = curOrders[rowIndex];
+        curOrder.scheduleStatus = schedulingStatus;
+        dispatch(setOrders([...curOrders, curOrder]));
     }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
@@ -36,13 +53,13 @@ const MyTasks = () => {
             cellRendererParams:{onAuthChange: onAuthChange}},
         {headerName: 'Schedule Status', field: 'scheduleStatus',flex:0.7,
         cellRenderer:ScheduleStatsDropdown,
-        cellRendererParams:{onAuthChange: onAuthChange}},
+        cellRendererParams:{onScheduleChange: onScheduleChange}},
         {headerName: 'Last Updated', field: 'lastUpdated', flex:0.6},
         {headerName: 'Add Note',flex:0.6, cellRenderer:AddNote },
         {headerName: 'History', flex:0.4, cellRenderer:NoteHistory},
     ]);
 
-    const curOrders = useSelector(selectOrders);
+
 
 
     useEffect (()=> {
@@ -51,14 +68,12 @@ const MyTasks = () => {
                 const patientName = PATIENTS.filter(patient => patient.athenaId === order.patientId)
                 if (patientName.length === 1) {
                     order.patientName = patientName[0].firstName + ' ' + patientName[0].lastName
-                    console.log('pateintName', order.patientName);
                 } 
-                // console.log(order)
                 return order;
             }) 
             setRowData(ordersWithPatientName)
         }
-    },[curOrders])
+    },[])
 
 
     const defaultColDef:ColDef = {
@@ -69,7 +84,6 @@ const MyTasks = () => {
     }
 
     useEffect(() => {
-        console.log(gridApi)
         if (gridApi) {
             console.log('resizing columns')
           gridApi.sizeColumnsToFit();
@@ -77,25 +91,7 @@ const MyTasks = () => {
       }, [gridApi]);
 
 
-      const getRowId = useMemo(() => {
-        return (params:GetRowIdParams) => params.data.id;
-      }, []);
 
-      const gridOptions = {
-        // Add event handlers
-        // onCellClicked: (event: CellClickedEvent) => console.log('cell event', event),
-        onCellValueChanged: (event:CellValueChangedEvent) => console.log('cell value', event)
-        // onComponentStateChanged: (event: ComponentStateChangedEvent) =>console.log('component changed event', event),
-        // getRowId: (params:GetRowIdParams) => params.data.id as string,
-    }
-
-    const handleRowUpdated = (event:RowDataUpdatedEvent) => {
-        console.log(event);
-    }
-
-    const handleComponentChanged = (event:ComponentStateChangedEvent) => {
-        console.log('component changed', event);
-    }
 
     return (
         <div className='ag-theme-alpine' style={{height: '500px'}}>
@@ -105,10 +101,6 @@ const MyTasks = () => {
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef} 
                 rowSelection='single'
-                gridOptions={gridOptions}
-                getRowId={getRowId}
-                onRowDataUpdated={handleRowUpdated}
-                onComponentStateChanged={handleComponentChanged}
             />
         </div>
     )

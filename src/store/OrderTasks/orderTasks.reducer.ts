@@ -1,6 +1,6 @@
 
 import { User, Order, Group, MetricStatus} from "./orderTasks.types";
-import { setUserOrders, setUser, setGroup } from "./actions/orderTasks.actions";
+import { setOrders, setUser, setGroup } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
 import { UNASSIGNED_USER } from "../../Data/userData";
 import { ORDERS } from "../../Data/orderData";
@@ -20,7 +20,7 @@ const OR_DATA_INITIAL_STATE: OrderTaskState = {
 }
 
 export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {
-    if (setUserOrders.match(action)) {
+    if (setOrders.match(action)) {
         return { ...state, orders: action.payload}
     }
     if (setUser.match(action)) {

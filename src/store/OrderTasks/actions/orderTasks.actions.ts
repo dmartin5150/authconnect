@@ -4,12 +4,12 @@ import { createAction, ActionWithPayload, withMatcher, Action } from "../../../u
 
 
 
-export type SetUserOrders = ActionWithPayload<ORDATA_TYPES.SET_USER_ORDERS, Order[]>
+export type SetOrders = ActionWithPayload<ORDATA_TYPES.SET_USER_ORDERS, Order[]>
 export type SetUser = ActionWithPayload<ORDATA_TYPES.SET_USER, User>
 export type SetGroup = ActionWithPayload<ORDATA_TYPES.SET_GROUP, Group>
 
 
-export const setUserOrders= withMatcher((orders: Order[]): SetUserOrders => {
+export const setOrders= withMatcher((orders: Order[]): SetOrders => {
     return createAction(ORDATA_TYPES.SET_USER_ORDERS, orders);
 });
 
