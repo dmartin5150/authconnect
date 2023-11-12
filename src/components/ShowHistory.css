@@ -1,0 +1,23 @@
+
+.viewhistory {
+    margin-top:3rem;
+    .viewhistory--form {
+        width:500px;
+        margin: 0 400px;
+        background-color: white;
+        padding:20px;
+
+        .viewhistory--label {
+            text-align:center;
+            padding: 1rem;
+            font-weight:bold;
+            font-size:medium;
+
+        } 
+        .createnote--buttons {
+            text-align:center;
+            padding:1rem;
+        }
+    }
+}
+

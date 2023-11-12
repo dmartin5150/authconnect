@@ -31,3 +31,8 @@ export const selectActionNotes = createSelector(
     [selectOrderTaskReducer],
     (orderTaskSlice) => orderTaskSlice.notes
 );
+
+export const selectViewNotes = createSelector(
+    [selectOrderTaskReducer],
+    (orderTaskSlice) => orderTaskSlice.viewNotes
+);
