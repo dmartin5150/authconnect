@@ -72,6 +72,7 @@ export enum ScheduleStatusType  {
 
 
 export type Order = {
+    id:number;
     orderNumber: number;
     orderName: string;
     orderDate: Date;

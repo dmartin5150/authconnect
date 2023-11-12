@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { GridApi, GridReadyEvent } from "ag-grid-community";
+import { GridApi, GridReadyEvent, CellClickedEvent,CellValueChangedEvent, RowDataUpdatedEvent, ComponentStateChangedEvent, GetRowIdParams } from "ag-grid-community";
 import { ColDef } from 'ag-grid-community';
 import { Order, Patient } from '../store/OrderTasks/orderTasks.types';
 import { useSelector } from "react-redux";
@@ -20,7 +20,7 @@ const MyTasks = () => {
 
 
     const onAuthChange = (authStatus:string) => {
-        console.log(authStatus)
+        console.log('AUTH CHANGE')
     }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
@@ -77,6 +77,26 @@ const MyTasks = () => {
       }, [gridApi]);
 
 
+      const getRowId = useMemo(() => {
+        return (params:GetRowIdParams) => params.data.id;
+      }, []);
+
+      const gridOptions = {
+        // Add event handlers
+        // onCellClicked: (event: CellClickedEvent) => console.log('cell event', event),
+        onCellValueChanged: (event:CellValueChangedEvent) => console.log('cell value', event)
+        // onComponentStateChanged: (event: ComponentStateChangedEvent) =>console.log('component changed event', event),
+        // getRowId: (params:GetRowIdParams) => params.data.id as string,
+    }
+
+    const handleRowUpdated = (event:RowDataUpdatedEvent) => {
+        console.log(event);
+    }
+
+    const handleComponentChanged = (event:ComponentStateChangedEvent) => {
+        console.log('component changed', event);
+    }
+
     return (
         <div className='ag-theme-alpine' style={{height: '500px'}}>
             <h1>MyTasks Page</h1>
@@ -85,6 +105,10 @@ const MyTasks = () => {
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef} 
                 rowSelection='single'
+                gridOptions={gridOptions}
+                getRowId={getRowId}
+                onRowDataUpdated={handleRowUpdated}
+                onComponentStateChanged={handleComponentChanged}
             />
         </div>
     )
