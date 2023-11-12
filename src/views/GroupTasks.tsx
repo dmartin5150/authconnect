@@ -1,8 +1,9 @@
 import React from 'react';
+import CreateNote from '../components/CreateNote';
 
 const GroupTasks = () => {
     return (
-        <h1>GroupTasks Page</h1>
+        <CreateNote classIsOpen={true} />
     )
 }
 export default GroupTasks;

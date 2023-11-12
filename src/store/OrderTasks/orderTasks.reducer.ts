@@ -1,6 +1,6 @@
 
-import { User, Order, Group, MetricStatus} from "./orderTasks.types";
-import { setOrders, setUser, setGroup } from "./actions/orderTasks.actions";
+import { User, Order, Group, CreateNoteInfo} from "./orderTasks.types";
+import { setOrders, setUser, setGroup, setCreateNoteOpen } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
 import { UNASSIGNED_USER } from "../../Data/userData";
 import { ORDERS } from "../../Data/orderData";
@@ -9,6 +9,7 @@ export type OrderTaskState = {
     orders: Order[];
     user: User;
     group: Group | {};
+    createNoteOpen: CreateNoteInfo;
 }
 
 
@@ -16,7 +17,8 @@ export type OrderTaskState = {
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
     orders: ORDERS,
     user:UNASSIGNED_USER,
-    group: {}
+    group: {},
+    createNoteOpen:{rowIndex: -1, classIsOpen:false}
 }
 
 export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {
@@ -28,6 +30,9 @@ export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction)
     }
     if (setGroup.match(action)) {
         return { ...state, group: action.payload}
+    }
+    if (setCreateNoteOpen.match(action)) {
+        return {...state, createNoteOpen:action.payload}
     }
     return state;
 }

@@ -1,8 +1,9 @@
 import React from 'react';
+import CreateNote from '../components/CreateNote';
 
 const Admin = () => {
     return (
-        <h1>Admin Page</h1>
+        <CreateNote classIsOpen={true} />
     )
 }
 export default Admin;

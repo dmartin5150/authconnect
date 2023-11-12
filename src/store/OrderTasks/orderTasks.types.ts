@@ -3,7 +3,8 @@
 export enum  ORDATA_TYPES {
     SET_USER_ORDERS  = 'orderTasks/SET_USER_ORDERS',
     SET_USER = 'orderTasks/SET_USER',
-    SET_GROUP = 'orderTasks/SET_GROUP'
+    SET_GROUP = 'orderTasks/SET_GROUP',
+    SET_CREATE_NOTE_OPEN = 'orderTasks/SET_CREATE_NOTE_OPEN'
 }
 
 export type Provider = {
@@ -100,6 +101,11 @@ export enum MetricStatus {
 }
 
 
+
+export type CreateNoteInfo = {
+    rowIndex:number;
+    classIsOpen:boolean;
+}
 
 export type Metric = {
     name: MetricStatus;

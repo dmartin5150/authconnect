@@ -1,0 +1,40 @@
+.createnote {
+    width: 30%;
+    height:500px;
+    margin: 10% auto;
+    display:none;
+
+
+
+
+    &.open {
+        opacity:1;
+        /* visibility: visible;  */
+        display:block;
+    }
+
+    .createnote--form {
+        display:flex;
+        flex-direction: column;
+        border: 1px solid grey;
+        border-radius: 5px;
+        padding: 2rem;
+        box-shadow: 2px 2px 5px grey;
+        background-color: white;
+
+        .createnote--buttons {
+            display: flex;
+            flex-direction: row;
+
+
+            .createnote--button{
+                margin-top: 5px; 
+            }
+            .createnote--button.submit{
+                margin-right: 10px; 
+            }
+        }
+    }
+
+
+}

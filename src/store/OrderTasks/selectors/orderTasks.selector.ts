@@ -21,3 +21,8 @@ export const selectGroup = createSelector(
     [selectOrderTaskReducer],
     (orderTaskSlice) => orderTaskSlice.group
 );
+
+export const selectCreateNoteOpen = createSelector(
+    [selectOrderTaskReducer],
+    (orderTaskSlice) => orderTaskSlice.createNoteOpen
+);

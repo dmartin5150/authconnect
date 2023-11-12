@@ -3,25 +3,26 @@ import {useDispatch} from 'react-redux';
 import { AgGridReact } from 'ag-grid-react';
 import { GridApi} from "ag-grid-community";
 import { ColDef } from 'ag-grid-community';
-import { Order, Patient, ScheduleStatusType } from '../store/OrderTasks/orderTasks.types';
+import { Order, ScheduleStatusType,ActionNote, CreateNoteInfo } from '../store/OrderTasks/orderTasks.types';
 import { useSelector } from "react-redux";
-import {selectOrders } from "../store/OrderTasks/selectors/orderTasks.selector" 
+import {selectOrders,selectCreateNoteOpen } from "../store/OrderTasks/selectors/orderTasks.selector" 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./MyTask.css";
 import { PATIENTS } from '../Data/patientData';
 import { AuthStatusType } from '../store/OrderTasks/orderTasks.types';
-
 import AuthStatsDropdown from '../components/AuthStatusDropdown';
 import AddNote from '../components/AddNote';
 import NoteHistory from '../components/NoteHistory';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
-import { setOrders } from '../store/OrderTasks/actions/orderTasks.actions';
+import { setOrders, setCreateNoteOpen } from '../store/OrderTasks/actions/orderTasks.actions';
+import CreateNote from '../components/CreateNote';
 
 
 const MyTasks = () => {
 
     const curOrders = useSelector(selectOrders);
+    const noteInfo = useSelector(selectCreateNoteOpen)
     const dispatch = useDispatch();
 
 
@@ -34,10 +35,15 @@ const MyTasks = () => {
     }
 
     const onScheduleChange = (rowIndex: number, schedulingStatus:ScheduleStatusType) => {
-        console.log('rI', rowIndex, schedulingStatus);
         const curOrder = curOrders[rowIndex];
         curOrder.scheduleStatus = schedulingStatus;
         dispatch(setOrders([...curOrders, curOrder]));
+    }
+
+    const onAddNote = (rowIndex: number, actionNote:ActionNote) => {
+        console.log('row index', rowIndex, 'note', actionNote);
+        const noteInfo:CreateNoteInfo = {rowIndex,classIsOpen:true};
+        dispatch(setCreateNoteOpen(noteInfo));
     }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
@@ -55,7 +61,10 @@ const MyTasks = () => {
         cellRenderer:ScheduleStatsDropdown,
         cellRendererParams:{onScheduleChange: onScheduleChange}},
         {headerName: 'Last Updated', field: 'lastUpdated', flex:0.6},
-        {headerName: 'Add Note',flex:0.6, cellRenderer:AddNote },
+        {headerName: 'Add Note',flex:0.6, 
+            cellRenderer:AddNote,
+            cellRendererParams:{onAddNote:onAddNote}
+        },
         {headerName: 'History', flex:0.4, cellRenderer:NoteHistory},
     ]);
 
@@ -96,6 +105,7 @@ const MyTasks = () => {
     return (
         <div className='ag-theme-alpine' style={{height: '500px'}}>
             <h1>MyTasks Page</h1>
+            {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}
             <AgGridReact 
                 rowData={rowData} 
                 columnDefs={columnDefs}
