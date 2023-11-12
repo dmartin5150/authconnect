@@ -8,7 +8,7 @@ import { ORDERS } from "../../Data/orderData";
 export type OrderTaskState = {
     orders: Order[];
     user: User;
-    group: Group | {};
+    groupId: number | {};
     createNoteOpen: CreateNoteInfo;
     viewNotes: ViewNoteInfo;
     notes: ActionNote[];
@@ -20,7 +20,7 @@ export type OrderTaskState = {
 const OR_DATA_INITIAL_STATE: OrderTaskState = {
     orders: ORDERS,
     user:UNASSIGNED_USER,
-    group: {},
+    groupId: 0,
     createNoteOpen:{orderId: -1, classIsOpen:false},
     viewNotes:{orderId: -1, classIsOpen:false},
     notes:[],
@@ -35,7 +35,7 @@ export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction)
         return { ...state, user: action.payload}
     }
     if (setGroup.match(action)) {
-        return { ...state, group: action.payload}
+        return { ...state, groupId: action.payload}
     }
     if (setCreateNoteOpen.match(action)) {
         return {...state, createNoteOpen:action.payload}

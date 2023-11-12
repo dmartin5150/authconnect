@@ -16,6 +16,7 @@ import AddNote from '../components/AddNote';
 import ShowHistory from '../components/ShowHistory';
 import ViewHistory from '../components/ViewHistory';
 import PriorityCell from '../components/PriorityCell';
+import UserDropDown from '../components/UserDropDown';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import CreateNote from '../components/CreateNote';
@@ -48,6 +49,7 @@ const MyTasks = () => {
     const [completed, setCompleted] = useState(0);
     const [notScheduled, setNotScheduled] = useState(0);
     const [scheduled, setScheduled] = useState(0);
+
 
 
 
@@ -89,14 +91,15 @@ const MyTasks = () => {
 
 
     useEffect(()=> {
-        const notStarted = curOrders.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
-        const pending = curOrders.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+        const userFilter = curOrders.filter((order) => order.assignedUserId === curUser.userId)
+        const notStarted = userFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = userFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
                                             order.authStatus === AuthStatusType.PENDING_P2P);
-        const completed =  curOrders.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+        const completed =  userFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
                                             order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
-        const scheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+        const scheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED);
-        const notScheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+        const notScheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
 
         if (selectedHeading === SelectedHeadings.NOT_STARTED) {
             setRowData(notStarted);
@@ -111,7 +114,7 @@ const MyTasks = () => {
         }
 
 
-    },[selectedHeading, curOrders])
+    },[selectedHeading, curOrders,curUser])
     
     const onAuthChange = (orderId: number, authStatus:AuthStatusType) => {
         const orderIndex = curOrders.findIndex((order) => order.id === orderId)
@@ -227,7 +230,8 @@ const MyTasks = () => {
                         onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled ({scheduled})</h4>
                 </div>
                 <div className='status-user' >
-                    <h4>User: {curUser.userName}</h4>
+                    <label className='status-user-label'>Current User:</label>
+                    <UserDropDown />
                 </div>
             </div>
             {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}

@@ -2,7 +2,7 @@ import React from 'react';
 import { ICellRendererParams} from "ag-grid-community";
 
 const PriorityCell: React.FC = ({...props}) => {
-    console.log('priority props',(props as ICellRendererParams).data )
+
     
     return (
         (props as ICellRendererParams).data.priority && <div className='high-priority'>
