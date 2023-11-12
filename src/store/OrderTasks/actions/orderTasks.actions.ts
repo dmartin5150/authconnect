@@ -1,5 +1,6 @@
-import { ORDATA_TYPES, User, Order, Group, CreateNoteInfo, ActionNote, ViewNoteInfo } from "../orderTasks.types";
+import { ORDATA_TYPES, User, Order, Group, CreateNoteInfo, ActionNote, ViewNoteInfo, StatusUpdateInfo } from "../orderTasks.types";
 import { createAction, ActionWithPayload, withMatcher, Action } from "../../../utilities/reducer/reducerutils";
+import { create } from "domain";
 
 
 
@@ -10,6 +11,7 @@ export type SetGroup = ActionWithPayload<ORDATA_TYPES.SET_GROUP, Group>
 export type SetCreateNoteOpen = ActionWithPayload<ORDATA_TYPES.SET_CREATE_NOTE_OPEN,CreateNoteInfo>
 export type SetActionNotes = ActionWithPayload<ORDATA_TYPES.SET_ACTION_NOTES, ActionNote[]>
 export type SetViewNotes = ActionWithPayload<ORDATA_TYPES.SET_VIEW_NOTES, ViewNoteInfo>
+export type SetStatusUpdate = ActionWithPayload<ORDATA_TYPES.SET_STATUS_UPDATE, StatusUpdateInfo>
 
 
 export const setOrders= withMatcher((orders: Order[]): SetOrders => {
@@ -34,5 +36,9 @@ export const setActionNotes = withMatcher((notes:ActionNote[]):SetActionNotes =>
 })
 
 export const setViewNotes = withMatcher((viewNote: ViewNoteInfo): SetViewNotes => {
-    return createAction(ORDATA_TYPES.SET_VIEW_NOTES, viewNote)
+    return createAction(ORDATA_TYPES.SET_VIEW_NOTES, viewNote);
+})
+
+export const setStatusUpdate = withMatcher((statusUpdate:StatusUpdateInfo): SetStatusUpdate => {
+    return createAction(ORDATA_TYPES.SET_STATUS_UPDATE, statusUpdate);
 })

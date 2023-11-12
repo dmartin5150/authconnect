@@ -3,9 +3,9 @@ import {useDispatch} from 'react-redux';
 import { AgGridReact } from 'ag-grid-react';
 import { GridApi} from "ag-grid-community";
 import { ColDef } from 'ag-grid-community';
-import { Order, ScheduleStatusType,ActionNote, CreateNoteInfo,ViewNoteInfo } from '../store/OrderTasks/orderTasks.types';
+import { Order, ScheduleStatusType,ActionNote, CreateNoteInfo,ViewNoteInfo, StatusUpdateInfo, StatusUpdateTypes } from '../store/OrderTasks/orderTasks.types';
 import { useSelector } from "react-redux";
-import {selectOrders,selectCreateNoteOpen, selectViewNotes } from "../store/OrderTasks/selectors/orderTasks.selector" 
+import {selectOrders,selectCreateNoteOpen, selectViewNotes, selectUser, selectActionNotes, selectStatusUpdate } from "../store/OrderTasks/selectors/orderTasks.selector" 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./MyTask.css";
@@ -17,30 +17,64 @@ import ShowHistory from '../components/ShowHistory';
 import NoteHistory from '../components/NoteHistory';
 import ViewHistory from '../components/ViewHistory';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
-import { setOrders, setCreateNoteOpen, setViewNotes } from '../store/OrderTasks/actions/orderTasks.actions';
+import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import CreateNote from '../components/CreateNote';
 
 
 const MyTasks = () => {
 
     const curOrders = useSelector(selectOrders);
-    const noteInfo = useSelector(selectCreateNoteOpen)
-    const viewInfo = useSelector(selectViewNotes)
+    const noteInfo = useSelector(selectCreateNoteOpen);
+    const viewInfo = useSelector(selectViewNotes);
+    const curUser = useSelector(selectUser);
+    const actionNotes = useSelector(selectActionNotes);
+    const statusUpdate = useSelector(selectStatusUpdate);
     const dispatch = useDispatch();
 
 
+
+    useEffect(() => {
+        if (statusUpdate.rowIndex !== -1){
+            const orderId = curOrders[statusUpdate.rowIndex].id;
+            const now = new Date();
+            const note = `Order ${statusUpdate.type} Status changed to ${statusUpdate.status}`;
+            const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now};
+            console.log('action notes', actionNotes);
+            dispatch(setActionNotes([...actionNotes, newNote]))
+            const newOrder = curOrders[statusUpdate.rowIndex]
+            newOrder.lastUpdated = now;
+            dispatch(setOrders([...curOrders, newOrder]));
+        }
+    },[statusUpdate])
+
+    
+    // const createActionNote = (authType:string, rowIndex:number, newStatus: AuthStatusType | ScheduleStatusType) => {
+    //     const orderId = curOrders[rowIndex].id;
+    //     const now = new Date();
+    //     const note = `Order ${authType} Status changed to ${newStatus}`;
+    //     const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now};
+    //     console.log('action notes', actionNotes);
+    //     dispatch(setActionNotes([...actionNotes, newNote]))
+    //     const newOrder = curOrders[rowIndex]
+    //     newOrder.lastUpdated = now;
+    //     dispatch(setOrders([...curOrders, newOrder]));
+    // }
 
     
     const onAuthChange = (rowIndex: number, authStatus:AuthStatusType) => {
         const curOrder = curOrders[rowIndex];
         curOrder.authStatus = authStatus;
         dispatch(setOrders([...curOrders, curOrder]));
+        const newStatus:StatusUpdateInfo = {rowIndex,type:StatusUpdateTypes.AUTH,status:authStatus}
+        dispatch(setStatusUpdate(newStatus))
     }
 
     const onScheduleChange = (rowIndex: number, schedulingStatus:ScheduleStatusType) => {
         const curOrder = curOrders[rowIndex];
         curOrder.scheduleStatus = schedulingStatus;
         dispatch(setOrders([...curOrders, curOrder]));
+        const newStatus:StatusUpdateInfo = {rowIndex,type:StatusUpdateTypes.AUTH,status:schedulingStatus}
+        dispatch(setStatusUpdate(newStatus))
     }
 
     const onAddNote = (rowIndex: number, actionNote:ActionNote) => {

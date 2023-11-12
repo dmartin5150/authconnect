@@ -6,7 +6,8 @@ export enum  ORDATA_TYPES {
     SET_GROUP = 'orderTasks/SET_GROUP',
     SET_CREATE_NOTE_OPEN = 'orderTasks/SET_CREATE_NOTE_OPEN',
     SET_ACTION_NOTES = 'orderTasks/SET_ACTION_NOTES',
-    SET_VIEW_NOTES = 'orderTasks/SET_VIEW_NOTES'
+    SET_VIEW_NOTES = 'orderTasks/SET_VIEW_NOTES',
+    SET_STATUS_UPDATE = 'orderTasks/SET_STATUS_UPDATE'
 }
 
 export type Provider = {
@@ -64,7 +65,8 @@ export enum AuthStatusType  {
     PENDING =  'Pending',
     OBTAINED =  'Auth Obtained',
     DENIED =  'Auth Denied',
-    PENDING_P2P = 'Pending P2P'
+    PENDING_P2P = 'Pending P2P',
+    NO_AUTH_REQUIRED = 'No Auth Required'
 }
 
 export enum ScheduleStatusType  {
@@ -118,6 +120,18 @@ export type ViewNoteInfo = {
     rowIndex:number;
     classIsOpen:boolean;
 }
+
+export enum StatusUpdateTypes  {
+    AUTH = 'Auth',
+    SCHEDULED = 'Scheduled'
+}
+
+export type StatusUpdateInfo = {
+    rowIndex:number;
+    status:AuthStatusType | ScheduleStatusType;
+    type: StatusUpdateTypes
+}
+
 
 export type Metric = {
     name: MetricStatus;

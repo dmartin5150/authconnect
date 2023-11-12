@@ -30,6 +30,7 @@ const AuthStatsDropdown: React.FC<AuthStatusDropdownProps> = ({onAuthChange, ...
                 <option value={AuthStatusType.PENDING}>Pending</option>
                 <option value={AuthStatusType.OBTAINED}>Obtained</option>
                 <option value={AuthStatusType.DENIED}>Denied </option>
+                <option value={AuthStatusType.NO_AUTH_REQUIRED}>Not Required</option>
                 <option value={AuthStatusType.PENDING_P2P}>Pending P2P</option>
             </select>
         </div>
