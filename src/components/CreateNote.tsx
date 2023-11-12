@@ -28,17 +28,16 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
     const noteInfo = useSelector(selectCreateNoteOpen)
 
     const createActionNote = () => {
-        const orderId = (props as ICellRendererParams).data.id;
         const now = new Date();
-        const newNote:ActionNote = {orderId, userName:curUser.userName, data:note, timeStamp:now}
+        const newNote:ActionNote = {orderId:noteInfo.orderId, userName:curUser.userName, data:note, timeStamp:now}
         dispatch(setActionNotes([...actionNotes, newNote]))
-        const orderIndex = curOrders.findIndex((order) => order.id === orderId);
+        const orderIndex = curOrders.findIndex((order) => order.id === noteInfo.orderId);
         if (orderIndex === -1) {
             return 
         }
         const newOrder = curOrders[orderIndex];
         const newOrders = [...curOrders]
-        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
+        const filteredOrders = newOrders.filter((order) => order.id !== noteInfo.orderId);
         newOrder.lastUpdated = now;
         dispatch(setOrders([...filteredOrders, newOrder]));
     }

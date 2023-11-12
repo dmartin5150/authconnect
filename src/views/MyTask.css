@@ -1,19 +1,28 @@
 .ag-theme-alpine {
     padding:0 1rem;
 
-    .status-headings {
-        display:flex;
+    .mytasks-header {
+        display: flex;
         flex-direction: row;
-        margin-bottom:10px;
+        justify-content: space-between;
+        align-items: center;
+        margin-left:1rem;
+        margin-right:1rem;
 
-        .status-heading {
-            margin: 0 5px;
+        .status-headings {
+            display:flex;
+            flex-direction: row;
+            margin-bottom:10px;
+
+            .status-heading {
+                margin: 0 5px;
 
 
-        }
-        .status-heading.selected {
-            color: blue;
-        }
+            }
+            .status-heading.selected {
+                color: blue;
+            }
 
+        }   
     }
 }

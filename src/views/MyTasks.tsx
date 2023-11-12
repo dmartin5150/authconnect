@@ -213,17 +213,22 @@ const MyTasks = () => {
 
     return (
         <div className='ag-theme-alpine' style={{height: '500px'}}>
-            <div className='status-headings'>
-                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_STARTED) ? 'selected' : ''})}
-                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started ({notStarted})</h4>
-                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.PENDING) ? 'selected' : ''})}  
-                    onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending ({pending})</h4>
-                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.COMPLETED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed ({completed})</h4>
-                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_SCHEDULED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled ({notScheduled})</h4>
-                <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.SCHEDULED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled ({scheduled})</h4>
+            <div className='mytasks-header'>
+                <div className='status-headings'>
+                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_STARTED) ? 'selected' : ''})}
+                        onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started ({notStarted})</h4>
+                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.PENDING) ? 'selected' : ''})}  
+                        onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending ({pending})</h4>
+                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.COMPLETED) ? 'selected' : ''})} 
+                        onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed ({completed})</h4>
+                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_SCHEDULED) ? 'selected' : ''})} 
+                        onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled ({notScheduled})</h4>
+                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.SCHEDULED) ? 'selected' : ''})} 
+                        onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled ({scheduled})</h4>
+                </div>
+                <div className='status-user' >
+                    <h4>User: {curUser.userName}</h4>
+                </div>
             </div>
             {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}
