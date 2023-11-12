@@ -4,7 +4,8 @@ export enum  ORDATA_TYPES {
     SET_USER_ORDERS  = 'orderTasks/SET_USER_ORDERS',
     SET_USER = 'orderTasks/SET_USER',
     SET_GROUP = 'orderTasks/SET_GROUP',
-    SET_CREATE_NOTE_OPEN = 'orderTasks/SET_CREATE_NOTE_OPEN'
+    SET_CREATE_NOTE_OPEN = 'orderTasks/SET_CREATE_NOTE_OPEN',
+    SET_ACTION_NOTES = 'orderTasks/SET_ACTION_NOTES'
 }
 
 export type Provider = {
@@ -29,7 +30,8 @@ export type User = {
 
 
 export type ActionNote = {
-    user: User;
+    orderId: number;
+    userName: string;
     timeStamp: Date;
     data: string;
 }
@@ -86,9 +88,12 @@ export type Order = {
     scheduleStatus: ScheduleStatusType
     assignedUserId: number;
     lastUpdated:Date | null;
-    notes: ActionNote[];
     patientName:string;
 }
+
+
+
+
 
 
 export enum MetricStatus {

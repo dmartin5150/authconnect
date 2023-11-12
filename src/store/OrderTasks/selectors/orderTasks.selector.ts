@@ -26,3 +26,8 @@ export const selectCreateNoteOpen = createSelector(
     [selectOrderTaskReducer],
     (orderTaskSlice) => orderTaskSlice.createNoteOpen
 );
+
+export const selectActionNotes = createSelector(
+    [selectOrderTaskReducer],
+    (orderTaskSlice) => orderTaskSlice.notes
+);
