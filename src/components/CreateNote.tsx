@@ -53,7 +53,6 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
         createActionNote();
         const cancelledNote:CreateNoteInfo = {orderId:-1, classIsOpen:false}
         dispatch(setCreateNoteOpen(cancelledNote));
-        console.log('Submitting note')
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

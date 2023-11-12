@@ -1,0 +1,9 @@
+.high-priority {
+    height: 15x;
+    width: 15px;
+
+    .high-priority-img {
+        height:100%;
+        width:100%;
+    }
+}

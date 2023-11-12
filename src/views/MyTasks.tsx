@@ -14,8 +14,8 @@ import { AuthStatusType } from '../store/OrderTasks/orderTasks.types';
 import AuthStatsDropdown from '../components/AuthStatusDropdown';
 import AddNote from '../components/AddNote';
 import ShowHistory from '../components/ShowHistory';
-import NoteHistory from '../components/NoteHistory';
 import ViewHistory from '../components/ViewHistory';
+import PriorityCell from '../components/PriorityCell';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import CreateNote from '../components/CreateNote';
@@ -43,7 +43,11 @@ const MyTasks = () => {
     }
 
     const [selectedHeading, setSelectedHeading] = useState<SelectedHeadings>(SelectedHeadings.NOT_STARTED);
-
+    const [notStarted, setNotStarted] = useState(0);
+    const [pending, setPending] = useState(0);
+    const [completed, setCompleted] = useState(0);
+    const [notScheduled, setNotScheduled] = useState(0);
+    const [scheduled, setScheduled] = useState(0);
 
 
 
@@ -53,7 +57,6 @@ const MyTasks = () => {
             const now = new Date();
             const note = `Order ${statusUpdate.type} Status changed to ${statusUpdate.status}`;
             const newNote:ActionNote = {orderId: statusUpdate.orderId, userName:curUser.userName, data:note, timeStamp:now};
-            // console.log('action notes', actionNotes);
             dispatch(setActionNotes([...actionNotes, newNote]))
             const orderIndex = curOrders.findIndex((order) => order.id === statusUpdate.orderId)
             if (orderIndex === -1) {
@@ -66,6 +69,23 @@ const MyTasks = () => {
             dispatch(setOrders([...filteredOrders, newOrder]));
         }
     },[statusUpdate])
+
+    useEffect(() => {
+        const notStarted = curOrders.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = curOrders.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+                                            order.authStatus === AuthStatusType.PENDING_P2P);
+        const completed =  curOrders.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+                                            order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
+        const scheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+                                            order.scheduleStatus === ScheduleStatusType.SCHEDULED);
+        const notScheduled = curOrders.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+        setNotStarted(notStarted.length);
+        setPending(pending.length);
+        setCompleted(completed.length);
+        setScheduled(scheduled.length);
+        setNotScheduled(notScheduled.length);
+    },[statusUpdate])
+
 
 
     useEffect(()=> {
@@ -98,7 +118,6 @@ const MyTasks = () => {
         if (orderIndex === -1) {
             return 
         }
-        console.log('orderIndex', orderIndex)
         const newOrder = curOrders[orderIndex]
         const newOrders = [...curOrders];
         const filteredOrders = newOrders.filter((order) => order.id !== orderId);
@@ -135,19 +154,20 @@ const MyTasks = () => {
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
     const [rowData, setRowData] = useState<Order[]>([]);
     const [columnDefs, setColDefs]=  useState<ColDef[]> ([
-        {headerName: '', field: 'priority', flex:0.2},
+        {headerName: '', field: 'priority', flex:0.3,
+            cellRenderer:PriorityCell},
         {headerName: 'Name', field: 'orderName', flex:0.8},
         {headerName: 'Order Date', field: 'orderDate', flex:0.8},
-        {headerName: 'Carrier', field: 'carrier', flex:0.6},
-        {headerName: 'Patient', field: 'patientName', flex:0.8},
+        {headerName: 'Carrier', field: 'carrier', flex:0.5},
+        {headerName: 'Patient', field: 'patientName', flex:0.7},
         {headerName: 'Auth Status', field: 'authStatus',flex:0.6,
             cellRenderer:AuthStatsDropdown,
             cellRendererParams:{onAuthChange: onAuthChange}},
         {headerName: 'Schedule Status', field: 'scheduleStatus',flex:0.7,
         cellRenderer:ScheduleStatsDropdown,
         cellRendererParams:{onScheduleChange: onScheduleChange}},
-        {headerName: 'Last Updated', field: 'lastUpdated', flex:0.6},
-        {headerName: 'Add Note',flex:0.6, 
+        {headerName: 'Last Updated', field: 'lastUpdated', flex:0.5},
+        {headerName: 'Add Note',flex:0.5, 
             cellRenderer:AddNote,
             cellRendererParams:{onAddNote:onAddNote}
         },
@@ -183,10 +203,10 @@ const MyTasks = () => {
 
     useEffect(() => {
         if (gridApi) {
-            // console.log('resizing columns')
           gridApi.sizeColumnsToFit();
         }
       }, [gridApi]);
+
 
 
 
@@ -195,15 +215,15 @@ const MyTasks = () => {
         <div className='ag-theme-alpine' style={{height: '500px'}}>
             <div className='status-headings'>
                 <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_STARTED) ? 'selected' : ''})}
-                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started (0)</h4>
+                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started ({notStarted})</h4>
                 <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.PENDING) ? 'selected' : ''})}  
-                    onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending (0)</h4>
+                    onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending ({pending})</h4>
                 <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.COMPLETED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed (0)</h4>
+                    onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed ({completed})</h4>
                 <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_SCHEDULED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled (0)</h4>
+                    onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled ({notScheduled})</h4>
                 <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.SCHEDULED) ? 'selected' : ''})} 
-                    onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled (0)</h4>
+                    onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled ({scheduled})</h4>
             </div>
             {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}

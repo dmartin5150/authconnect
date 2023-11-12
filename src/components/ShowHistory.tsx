@@ -43,8 +43,7 @@ const ShowHistory: React.FC<ShowHistoryProps> = ({classIsOpen, ...props}) => {
 
 
     useEffect  (() => {
-        const orderId = (props as ICellRendererParams).data.id;
-        const curActionNotes = actionNotes.filter((note) =>  note.orderId === orderId);
+        const curActionNotes = actionNotes.filter((note) =>  note.orderId === viewNotes.orderId);
         setRowData(curActionNotes);
     },[orders, actionNotes]);
 
