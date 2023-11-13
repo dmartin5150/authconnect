@@ -9,18 +9,18 @@ export enum  METRICS_TYPES {
 export type GroupMetric = {
     userId: number;
     userName: string;
-    notStarted: MetricStatus;
     notStartedCount: number;
-    pending: MetricStatus;
     pendingCount: number;
-    complete: MetricStatus;
-    completeCount: number;
-    scheduled: MetricStatus;
+    completedCount: number;
     scheduledCount: number;
-    notScheduled: MetricStatus;
     notScheduledCount: number;
     authTotals: number;
-    scheduleTotals: number;
+    scheduledTotals: number;
 
 
+}
+
+export type GroupUser = {
+    userId: number;
+    userName: string;
 }

@@ -26,6 +26,7 @@ import classnames from "classnames";
 import { GROUPS } from '../Data/groupData';
 import { EMPTY_ORDER } from '../Data/orderData';
 import { USERS } from '../Data/userData';
+import { GroupUser, GroupMetric } from '../store/Metrics/metrics.types';
 
 
 
@@ -115,11 +116,35 @@ const Metrics = () => {
         setNotScheduled(notScheduled.length);
     },[authStatusInfo, curOrders,curGroup])
 
+    const getGroupUsers = (groupOrders:Order[]) => {
+        const groupUserIds = groupOrders.map((order) => order.assignedUserId);
+        const groupUsers:GroupUser[] = groupUserIds.map((userId) => {
+            const userName = USERS.filter((user) => user.userId === userId)[0].userName
+            return {userId: userId, userName}
+        } );
+        return groupUsers;
+    }
+
+
+    const getGroupMetrics = (groupUsers:GroupUser[], notStarted:Order[],pending:Order[], completed:Order[],scheduled:Order[],notScheduled:Order[]) => {
+        const groupMetrics:GroupMetric[] = groupUsers.map((user) => {
+            const notStartedCount = notStarted.filter((order) => order.assignedUserId === user.userId).length;
+            const pendingCount = pending.filter((order) => order.assignedUserId === user.userId).length;
+            const completedCount = completed.filter((order) => order.assignedUserId === user.userId).length;
+            const scheduledCount = scheduled.filter((order) => order.assignedUserId === user.userId).length;
+            const notScheduledCount  = notScheduled.filter((order) => order.assignedUserId === user.userId).length;
+            const authTotals = notStartedCount + pendingCount + completedCount;
+            const scheduledTotals = scheduledCount + notScheduledCount;
+            return {userId:user.userId, userName:user.userName, notStartedCount,pendingCount,completedCount,scheduledCount,notScheduledCount,authTotals,scheduledTotals }
+        });
+        return groupMetrics;
+    }
 
 
     useEffect(()=> {
         let groupFilter = getGroupOrders(curOrders);
-        groupFilter = groupFilter.filter((order) => order.id !== 0);
+        groupFilter = Array.from(new Set(groupFilter.filter((order) => order.id !== 0)));
+        const groupUsers = getGroupUsers(groupFilter);
         const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED).sort((a,b) => a.id - b.id);;
         const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
                                             order.authStatus === AuthStatusType.PENDING_P2P).sort((a,b) => a.id - b.id);
@@ -129,17 +154,9 @@ const Metrics = () => {
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED).sort((a,b) => a.id - b.id);;
         const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED).sort((a,b) => a.id - b.id);;
 
-        if (selectedHeading === SelectedHeadings.NOT_STARTED) {
-            setRowData(notStarted);
-        } else if (selectedHeading === SelectedHeadings.PENDING) {
-            setRowData(pending);
-        } else if (selectedHeading === SelectedHeadings.COMPLETED) {
-            setRowData(completed);
-        }else if (selectedHeading === SelectedHeadings.SCHEDULED) {
-            setRowData(scheduled);
-        } else {
-            setRowData(notScheduled);
-        }
+        const groupMetrics:GroupMetric[] = getGroupMetrics(groupUsers, notStarted,pending, completed, scheduled, notScheduled);
+
+        setRowData(groupMetrics);
 
     },[selectedHeading, curOrders,authStatusInfo,curGroup])
     
@@ -170,27 +187,16 @@ const Metrics = () => {
     }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
-    const [rowData, setRowData] = useState<Order[]>([]);
+    const [rowData, setRowData] = useState<GroupMetric[]>([]);
     const [columnDefs, setColDefs]=  useState<ColDef[]> ([
-        {headerName: '', field: 'priority', flex:0.3,
-            cellRenderer:PriorityCell},
-        {headerName: 'Name', field: 'orderName', flex:0.8},
-        {headerName: 'Order Date', field: 'orderDate', flex:0.8},
-        {headerName: 'Carrier', field: 'carrier', flex:0.5},
-        {headerName: 'Patient', field: 'patientName', flex:0.7},
-        {headerName: 'Department', field: 'departmentId',flex:0.6},
-        {headerName: 'Assigned User', field: 'assignedUserId',flex:0.7,
-        cellRenderer:AssignedUserDropdown,
-        cellRendererParams:{onAssignUserChange: onAssignUserChange}},
-        {headerName: 'Last Updated', field: 'lastUpdated', flex:0.5},
-        {headerName: 'Add Note',flex:0.5, 
-            cellRenderer:AddNote,
-            cellRendererParams:{onAddNote:onAddNote}
-        },
-        {headerName: 'History', flex:0.4, 
-            cellRenderer:ViewHistory, 
-            cellRendererParams:{onAddViewHistory:onAddViewHistory}
-    },
+        {headerName: 'User Name', field: 'userName', flex:0.8},
+        {headerName: 'Not Started', field: 'notStartedCount', flex:0.8},
+        {headerName: 'Pending', field: 'pendingCount', flex:0.5},
+        {headerName: 'Completed', field: 'completedCount', flex:0.7},
+        {headerName: 'Scheduled', field: 'scheduledCount',flex:0.6},
+        {headerName: 'Not Scheduled', field: 'notScheduledCount',flex:0.6},
+        {headerName: 'Auth Totals', field: 'authTotals',flex:0.6},
+        {headerName: 'Scheduled Totals', field: 'scheduledTotals',flex:0.6},
     ]);
 
 
@@ -207,7 +213,7 @@ const Metrics = () => {
             }) 
             let groupFilter = getGroupOrders(ordersWithPatientName);
             groupFilter = groupFilter.filter((order) => order.id !== 0);
-            setRowData(groupFilter)
+            // setRowData(groupFilter)
         }
     },[])
 
