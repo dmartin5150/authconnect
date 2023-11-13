@@ -5,6 +5,7 @@ import { User } from '../store/OrderTasks/orderTasks.types';
 import { selectGroup } from '../store/AssignTasks/selectors/AssignTasks.selectors';
 import {useSelector, useDispatch} from 'react-redux';
 import { UNASSIGNED_USER } from '../Data/userData';
+import classnames from "classnames";
 
 
 export interface AssignUserDropdownProps {
@@ -27,8 +28,11 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
             return UNASSIGNED_USER;
         });
         curUsers = curUsers.filter((user) => user.userId !== 0);
+        curUsers.push(UNASSIGNED_USER);
         setUserList(curUsers);
     },[curGroup])
+
+
 
     useEffect (()=> {
         setAssignedUser((props as ICellRendererParams).data.assignedUserId);
@@ -44,7 +48,9 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
         <div>
             <select value={assignedUser} onChange={onChange}>
                 {userList.map((user, idx) => {
-                    return <option value={user?.userId} key={idx}>{user?.userName}</option>
+                    return <option
+                    className ={classnames({selected:((props as ICellRendererParams).data.assignedUserId === user.userId) ? 'selected' : ''})}
+                    value={user?.userId} key={idx}>{user?.userName}</option>
                 })}
             </select>
         </div>

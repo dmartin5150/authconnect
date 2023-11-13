@@ -25,6 +25,8 @@ import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
 import { GROUPS } from '../Data/groupData';
 import { EMPTY_ORDER } from '../Data/orderData';
+import { USERS } from '../Data/userData';
+
 
 
 const AssignTasks = () => {
@@ -61,22 +63,23 @@ const AssignTasks = () => {
 
 
     useEffect(() => {
-        if (statusUpdate.orderId !== -1){
+        if (authStatusInfo.orderId !== -1){
             const now = new Date();
-            const note = `Order ${statusUpdate.type} Status changed to ${statusUpdate.status}`;
-            const newNote:ActionNote = {orderId: statusUpdate.orderId, userName:curUser.userName, data:note, timeStamp:now};
+            const userName = USERS.filter((user) => user.userId === authStatusInfo.userId)[0].userName;
+            const note = `User reassigned to ${userName}`;
+            const newNote:ActionNote = {orderId: authStatusInfo.orderId, userName:userName, data:note, timeStamp:now};
             dispatch(setActionNotes([...actionNotes, newNote]))
-            const orderIndex = curOrders.findIndex((order) => order.id === statusUpdate.orderId)
+            const orderIndex = curOrders.findIndex((order) => order.id === authStatusInfo.orderId)
             if (orderIndex === -1) {
                 return;
             }
             const newOrders = [...curOrders];
-            const filteredOrders = newOrders.filter((order) => order.id !== statusUpdate.orderId);
+            const filteredOrders = newOrders.filter((order) => order.id !== authStatusInfo.orderId);
             const newOrder = curOrders[orderIndex]
             newOrder.lastUpdated = now;
             dispatch(setOrders([...filteredOrders, newOrder]));
         }
-    },[statusUpdate])
+    },[authStatusInfo])
  
 
     const getGroupOrders = (orders:Order[]) => {
@@ -115,17 +118,16 @@ const AssignTasks = () => {
 
 
     useEffect(()=> {
-        console.log('setting row data');
         let groupFilter = getGroupOrders(curOrders);
         groupFilter = groupFilter.filter((order) => order.id !== 0);
-        const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED).sort((a,b) => a.id - b.id);;
         const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
-                                            order.authStatus === AuthStatusType.PENDING_P2P);
+                                            order.authStatus === AuthStatusType.PENDING_P2P).sort((a,b) => a.id - b.id);
         const completed =  groupFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
-                                            order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
+                                            order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED).sort((a,b) => a.id - b.id);;
         const scheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
-                                            order.scheduleStatus === ScheduleStatusType.SCHEDULED);
-        const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+                                            order.scheduleStatus === ScheduleStatusType.SCHEDULED).sort((a,b) => a.id - b.id);;
+        const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED).sort((a,b) => a.id - b.id);;
 
         if (selectedHeading === SelectedHeadings.NOT_STARTED) {
             setRowData(notStarted);
