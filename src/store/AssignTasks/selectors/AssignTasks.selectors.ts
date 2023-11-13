@@ -10,4 +10,9 @@ export const selectGroup = createSelector(
     (orderTaskSlice) => orderTaskSlice.group
 );
 
+export const selectAuthStatusInfo = createSelector(
+    [selectAssignTaskReducer],
+    (orderTaskSlice) => orderTaskSlice.authStatusInfo
+);
+
 

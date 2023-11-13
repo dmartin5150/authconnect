@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { GridApi} from "ag-grid-community";
 import { ColDef } from 'ag-grid-community';
 import { Order, ScheduleStatusType,ActionNote, CreateNoteInfo,ViewNoteInfo, StatusUpdateInfo, StatusUpdateTypes } from '../store/OrderTasks/orderTasks.types';
+import { AuthStatusInfo } from '../store/AssignTasks/AssignTasks.types';
 import { useSelector } from "react-redux";
 import {selectOrders,selectCreateNoteOpen, selectViewNotes, selectUser, selectActionNotes, selectStatusUpdate } from "../store/OrderTasks/selectors/orderTasks.selector" 
 import "ag-grid-community/styles/ag-grid.css";
@@ -11,14 +12,14 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./AssignTasks.css"
 import { PATIENTS } from '../Data/patientData';
 import { AuthStatusType } from '../store/OrderTasks/orderTasks.types';
-import AuthStatsDropdown from '../components/AuthStatusDropdown';
 import AddNote from '../components/AddNote';
 import ShowHistory from '../components/ShowHistory';
 import ViewHistory from '../components/ViewHistory';
 import PriorityCell from '../components/PriorityCell';
 import GroupDropdown from '../components/GroupDropdown';
-import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
+import AssignedUserDropdown from '../components/AssignedUserDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
+import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.actions';
 import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
 
@@ -131,7 +132,7 @@ const AssignTasks = () => {
         dispatch(setStatusUpdate(newStatus))
     }
 
-    const onScheduleChange = (orderId: number, schedulingStatus:ScheduleStatusType) => {
+    const onAssignUserChange = (orderId: number, userId:number) => {
         const orderIndex = curOrders.findIndex((order) => order.id === orderId)
         if (orderIndex === -1) {
             return 
@@ -139,10 +140,10 @@ const AssignTasks = () => {
         const newOrder = curOrders[orderIndex]
         const newOrders = [...curOrders];
         const filteredOrders = newOrders.filter((order) => order.id !== orderId);
-        newOrder.scheduleStatus = schedulingStatus;
+        newOrder.assignedUserId = userId;
         dispatch(setOrders([...filteredOrders, newOrder]));
-        const newStatus:StatusUpdateInfo = {orderId,type:StatusUpdateTypes.AUTH,status:schedulingStatus}
-        dispatch(setStatusUpdate(newStatus))
+        const newStatus:AuthStatusInfo = {orderId,userId};
+        dispatch(setAuthStatusInfo(newStatus));
     }
 
     const onAddNote = (orderId: number, actionNote:ActionNote) => {
@@ -164,12 +165,10 @@ const AssignTasks = () => {
         {headerName: 'Order Date', field: 'orderDate', flex:0.8},
         {headerName: 'Carrier', field: 'carrier', flex:0.5},
         {headerName: 'Patient', field: 'patientName', flex:0.7},
-        {headerName: 'Auth Status', field: 'authStatus',flex:0.6,
-            cellRenderer:AuthStatsDropdown,
-            cellRendererParams:{onAuthChange: onAuthChange}},
-        {headerName: 'Schedule Status', field: 'scheduleStatus',flex:0.7,
-        cellRenderer:ScheduleStatsDropdown,
-        cellRendererParams:{onScheduleChange: onScheduleChange}},
+        {headerName: 'Department', field: 'departmentId',flex:0.6},
+        {headerName: 'Assigned User', field: 'assignedUserId',flex:0.7,
+        cellRenderer:AssignedUserDropdown,
+        cellRendererParams:{onAssignUserChange: onAssignUserChange}},
         {headerName: 'Last Updated', field: 'lastUpdated', flex:0.5},
         {headerName: 'Add Note',flex:0.5, 
             cellRenderer:AddNote,
