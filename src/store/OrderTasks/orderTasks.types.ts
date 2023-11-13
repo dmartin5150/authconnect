@@ -6,7 +6,7 @@ export enum  ORDATA_TYPES {
     SET_CREATE_NOTE_OPEN = 'orderTasks/SET_CREATE_NOTE_OPEN',
     SET_ACTION_NOTES = 'orderTasks/SET_ACTION_NOTES',
     SET_VIEW_NOTES = 'orderTasks/SET_VIEW_NOTES',
-    SET_STATUS_UPDATE = 'orderTasks/SET_STATUS_UPDATE'
+    SET_STATUS_UPDATE = 'orderTasks/SET_STATUS_UPDATE',
 }
 
 export type Provider = {
@@ -95,14 +95,6 @@ export type Order = {
 
 
 
-export enum MetricStatus {
-    NOT_STARTED = 'Not Started',
-    PENDING =  'Pending',
-    COMPLETED =  'Completed',
-    NOT_SCHEDULED = 'Not Scheduled',
-    SCHEDULED =  'Scheduled',
-    OUTSIDE_FACILITY =  'Scheduled Outside Facility'
-}
 
 
 
@@ -129,10 +121,28 @@ export type StatusUpdateInfo = {
 }
 
 
+
+export enum MetricStatus {
+    NOT_STARTED = 'Not Started',
+    PENDING =  'Pending',
+    COMPLETED =  'Completed',
+    NOT_SCHEDULED = 'Not Scheduled',
+    SCHEDULED =  'Scheduled',
+    OUTSIDE_FACILITY =  'Scheduled Outside Facility'
+}
+
 export type Metric = {
     name: MetricStatus;
     count: number;
 }
+
+
+export type UserMetrics = {
+    userId: number;
+    userName:string;
+    metric: Metric;
+}
+
 
 export type Group = {
     groupId: number;
