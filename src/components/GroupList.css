@@ -1,0 +1,25 @@
+.grouplist {
+    margin-left:30px;
+    margin-right:30px;
+    width: 400px;
+    .grouplist-heading {
+        font-weight: bold;
+    }
+    .grouplist-box {
+        border: 1px solid black;
+        margin: 0;
+        padding:5px;
+        text-align: center;
+
+        .grouplist-ul  {
+            list-style-type: none;
+            text-align: center;
+            margin:0;
+            
+            .grouplist-item {
+                text-align: left;
+                padding:2px 0;
+            }
+        }
+    }
+}

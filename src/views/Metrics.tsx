@@ -162,29 +162,29 @@ const Metrics = () => {
     
 
 
-    const onAssignUserChange = (orderId: number, userId:number) => {
-        const orderIndex = curOrders.findIndex((order) => order.id === orderId)
-        if (orderIndex === -1) {
-            return 
-        }
-        const newOrder = curOrders[orderIndex]
-        const newOrders = [...curOrders];
-        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
-        newOrder.assignedUserId = userId;
-        dispatch(setOrders([...filteredOrders, newOrder]));
-        const newStatus:AuthStatusInfo = {orderId,userId};
-        dispatch(setAuthStatusInfo(newStatus));
-    }
+    // const onAssignUserChange = (orderId: number, userId:number) => {
+    //     const orderIndex = curOrders.findIndex((order) => order.id === orderId)
+    //     if (orderIndex === -1) {
+    //         return 
+    //     }
+    //     const newOrder = curOrders[orderIndex]
+    //     const newOrders = [...curOrders];
+    //     const filteredOrders = newOrders.filter((order) => order.id !== orderId);
+    //     newOrder.assignedUserId = userId;
+    //     dispatch(setOrders([...filteredOrders, newOrder]));
+    //     const newStatus:AuthStatusInfo = {orderId,userId};
+    //     dispatch(setAuthStatusInfo(newStatus));
+    // }
 
-    const onAddNote = (orderId: number, actionNote:ActionNote) => {
-        const noteInfo:CreateNoteInfo = {orderId,classIsOpen:true};
-        dispatch(setCreateNoteOpen(noteInfo));
-    }
+    // const onAddNote = (orderId: number, actionNote:ActionNote) => {
+    //     const noteInfo:CreateNoteInfo = {orderId,classIsOpen:true};
+    //     dispatch(setCreateNoteOpen(noteInfo));
+    // }
 
-    const onAddViewHistory = (orderId:number) => {
-        const viewInfo:ViewNoteInfo = {orderId,classIsOpen:true};
-        dispatch(setViewNotes(viewInfo)); 
-    }
+    // const onAddViewHistory = (orderId:number) => {
+    //     const viewInfo:ViewNoteInfo = {orderId,classIsOpen:true};
+    //     dispatch(setViewNotes(viewInfo)); 
+    // }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
     const [rowData, setRowData] = useState<GroupMetric[]>([]);
@@ -239,16 +239,11 @@ const Metrics = () => {
         <div className='ag-theme-alpine' style={{height: '500px'}}>
             <div className='mytasks-header'>
                 <div className='status-headings'>
-                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_STARTED) ? 'selected' : ''})}
-                        onClick={()=> setSelectedHeading(SelectedHeadings.NOT_STARTED)}>Not Started ({notStarted})</h4>
-                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.PENDING) ? 'selected' : ''})}  
-                        onClick={()=>setSelectedHeading(SelectedHeadings.PENDING)}>Pending ({pending})</h4>
-                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.COMPLETED) ? 'selected' : ''})} 
-                        onClick={()=> setSelectedHeading(SelectedHeadings.COMPLETED)}>Completed ({completed})</h4>
-                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.NOT_SCHEDULED) ? 'selected' : ''})} 
-                        onClick={()=> setSelectedHeading(SelectedHeadings.NOT_SCHEDULED)}>Not Scheduled ({notScheduled})</h4>
-                    <h4 className ={classnames("status-heading",{selected:(selectedHeading === SelectedHeadings.SCHEDULED) ? 'selected' : ''})} 
-                        onClick={()=> setSelectedHeading(SelectedHeadings.SCHEDULED)}>Scheduled ({scheduled})</h4>
+                    <h4 className="status-heading">Not Started ({notStarted})</h4>
+                    <h4 className="status-heading">Pending ({pending})</h4>
+                    <h4 className="status-heading">Completed ({completed})</h4>
+                    <h4 className="status-heading">Not Scheduled ({notScheduled})</h4>
+                    <h4 className ="status-heading">Scheduled ({scheduled})</h4>
                 </div>
                 <div className='status-group' >
                     <label className='status-group-label'>Current Group:</label>
