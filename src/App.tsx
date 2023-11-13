@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import Admin from './views/Admin';
-import GroupTasks from './views/GroupTasks';
+import AssignTasks from './views/AssignTasks';
 import MyTasks from './views/MyTasks';
 import Metrics from './views/Metrics';
 import Navigation from './routes/navigation/navigation.component';
@@ -14,7 +14,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Navigation />}>
         <Route path="/" element={<MyTasks />}></Route>
-        <Route path="/GroupTasks" element={<GroupTasks />}></Route>
+        <Route path="/AssignTasks" element={<AssignTasks />}></Route>
         <Route path="/Admin" element={<Admin />}></Route>
         <Route path="/Metrics" element={<Metrics />}></Route>
       </Route>

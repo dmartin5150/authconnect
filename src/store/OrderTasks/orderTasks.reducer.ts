@@ -1,6 +1,6 @@
 
 import { User, Order, Group, CreateNoteInfo,ActionNote, ViewNoteInfo, StatusUpdateInfo, AuthStatusType,StatusUpdateTypes} from "./orderTasks.types";
-import { setOrders, setUser, setGroup, setCreateNoteOpen, setActionNotes, setViewNotes, setStatusUpdate  } from "./actions/orderTasks.actions";
+import { setOrders, setUser,  setCreateNoteOpen, setActionNotes, setViewNotes, setStatusUpdate  } from "./actions/orderTasks.actions";
 import { AnyAction } from "redux";
 import { UNASSIGNED_USER } from "../../Data/userData";
 import { ORDERS } from "../../Data/orderData";
@@ -8,7 +8,6 @@ import { ORDERS } from "../../Data/orderData";
 export type OrderTaskState = {
     orders: Order[];
     user: User;
-    groupId: number | {};
     createNoteOpen: CreateNoteInfo;
     viewNotes: ViewNoteInfo;
     notes: ActionNote[];
@@ -17,25 +16,21 @@ export type OrderTaskState = {
 
 
 
-const OR_DATA_INITIAL_STATE: OrderTaskState = {
+const ORDER_TASKS_INITIAL_STATE: OrderTaskState = {
     orders: ORDERS,
     user:UNASSIGNED_USER,
-    groupId: 0,
     createNoteOpen:{orderId: -1, classIsOpen:false},
     viewNotes:{orderId: -1, classIsOpen:false},
     notes:[],
     statusUpdate: {orderId:-1, status:AuthStatusType.NOT_STARTED, type:StatusUpdateTypes.AUTH }
 }
 
-export const OrderTaskReducer = (state=OR_DATA_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {
+export const OrderTaskReducer = (state=ORDER_TASKS_INITIAL_STATE, action: AnyAction):OrderTaskState =>  {
     if (setOrders.match(action)) {
         return { ...state, orders: action.payload}
     }
     if (setUser.match(action)) {
         return { ...state, user: action.payload}
-    }
-    if (setGroup.match(action)) {
-        return { ...state, groupId: action.payload}
     }
     if (setCreateNoteOpen.match(action)) {
         return {...state, createNoteOpen:action.payload}

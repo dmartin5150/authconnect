@@ -27,6 +27,17 @@ const Navigation = () => {
                 :{}
                 )}
             to="/" end>My Tasks</NavLink>
+                   <NavLink  className="nav__link"
+            style={
+              ({isActive}) => (
+                isActive 
+                ? {
+                  textDecoration: 'none',
+                  color: '#1b4297'
+                  }
+                :{}
+                )}
+            to="/AssignTasks" end>Assign Tasks</NavLink>   
          <NavLink   className="nav__link"
               style={
               ({isActive}) => (

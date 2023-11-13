@@ -3,7 +3,7 @@ import CreateNote from '../components/CreateNote';
 
 const Admin = () => {
     return (
-        <CreateNote classIsOpen={true} />
+        <h1>Admin</h1>
     )
 }
 export default Admin;

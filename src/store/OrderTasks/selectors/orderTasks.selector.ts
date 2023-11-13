@@ -17,10 +17,6 @@ export const selectUser = createSelector(
     (orderTaskSlice) => orderTaskSlice.user
 );
 
-export const selectGroup = createSelector(
-    [selectOrderTaskReducer],
-    (orderTaskSlice) => orderTaskSlice.groupId
-);
 
 export const selectCreateNoteOpen = createSelector(
     [selectOrderTaskReducer],

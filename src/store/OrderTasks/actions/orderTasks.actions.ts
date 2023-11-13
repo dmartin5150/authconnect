@@ -1,13 +1,12 @@
-import { ORDATA_TYPES, User, Order, Group, CreateNoteInfo, ActionNote, ViewNoteInfo, StatusUpdateInfo } from "../orderTasks.types";
+import { ORDATA_TYPES, User, Order, CreateNoteInfo, ActionNote, ViewNoteInfo, StatusUpdateInfo } from "../orderTasks.types";
 import { createAction, ActionWithPayload, withMatcher, Action } from "../../../utilities/reducer/reducerutils";
-import { create } from "domain";
+
 
 
 
 
 export type SetOrders = ActionWithPayload<ORDATA_TYPES.SET_USER_ORDERS, Order[]>
 export type SetUser = ActionWithPayload<ORDATA_TYPES.SET_USER, User>
-export type SetGroup = ActionWithPayload<ORDATA_TYPES.SET_GROUP, number>
 export type SetCreateNoteOpen = ActionWithPayload<ORDATA_TYPES.SET_CREATE_NOTE_OPEN,CreateNoteInfo>
 export type SetActionNotes = ActionWithPayload<ORDATA_TYPES.SET_ACTION_NOTES, ActionNote[]>
 export type SetViewNotes = ActionWithPayload<ORDATA_TYPES.SET_VIEW_NOTES, ViewNoteInfo>
@@ -22,9 +21,7 @@ export const setUser = withMatcher((user:User):SetUser => {
     return createAction(ORDATA_TYPES.SET_USER, user);
 });
 
-export const setGroup = withMatcher((groupId:number): SetGroup => {
-    return createAction(ORDATA_TYPES.SET_GROUP, groupId);
-});
+
 
 export const setCreateNoteOpen = withMatcher((noteInfo:CreateNoteInfo):SetCreateNoteOpen => {
     return createAction(ORDATA_TYPES.SET_CREATE_NOTE_OPEN, noteInfo);

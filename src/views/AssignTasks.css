@@ -1,0 +1,7 @@
+.ag-theme-alpine {
+    .mytasks-header {
+        .status-group {
+            font-weight: bold;
+        }  
+    }
+}
