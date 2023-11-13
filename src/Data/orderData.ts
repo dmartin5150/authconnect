@@ -1,6 +1,8 @@
 import { Order } from "../store/OrderTasks/orderTasks.types";
 import { AuthStatusType, ScheduleStatusType } from "../store/OrderTasks/orderTasks.types";
 
+export const EMPTY_ORDER: Order = 
+{id:0, orderNumber:0, orderName:'Blank', orderDate:new Date('2023-11-01'),providerId:0,patientName:'', carrier:'', priority:false, departmentId:0,patientId:0,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null}
 
 export const ORDERS: Order[] = [ 
     {id:1, orderNumber:1, orderName:'MRI Brain', orderDate:new Date('2023-11-01'),providerId:7,patientName:'', carrier:'Aetna', priority:false, departmentId:222222,patientId:11111111,authStatus:AuthStatusType.NOT_STARTED, scheduleStatus:ScheduleStatusType.NOT_SCHEDULED,assignedUserId:0, lastUpdated:null},

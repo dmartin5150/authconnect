@@ -7,6 +7,7 @@ import { Order, ScheduleStatusType,ActionNote, CreateNoteInfo,ViewNoteInfo, Stat
 import { AuthStatusInfo } from '../store/AssignTasks/AssignTasks.types';
 import { useSelector } from "react-redux";
 import {selectOrders,selectCreateNoteOpen, selectViewNotes, selectUser, selectActionNotes, selectStatusUpdate } from "../store/OrderTasks/selectors/orderTasks.selector" 
+import { selectGroup, selectAuthStatusInfo  } from '../store/AssignTasks/selectors/AssignTasks.selectors';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./AssignTasks.css"
@@ -22,6 +23,8 @@ import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpd
 import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.actions';
 import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
+import { GROUPS } from '../Data/groupData';
+import { EMPTY_ORDER } from '../Data/orderData';
 
 
 const AssignTasks = () => {
@@ -32,6 +35,8 @@ const AssignTasks = () => {
     const curUser = useSelector(selectUser);
     const actionNotes = useSelector(selectActionNotes);
     const statusUpdate = useSelector(selectStatusUpdate);
+    const curGroup = useSelector(selectGroup);
+    const authStatusInfo = useSelector(selectAuthStatusInfo);
     const dispatch = useDispatch();
 
 
@@ -72,36 +77,55 @@ const AssignTasks = () => {
             dispatch(setOrders([...filteredOrders, newOrder]));
         }
     },[statusUpdate])
+ 
+
+    const getGroupOrders = (orders:Order[]) => {
+        let groupOrders= orders.map((order) => {
+            const providerIndex = curGroup.departmentIds.indexOf(order.departmentId);
+            const departmentIndex = curGroup.providerIds.indexOf(order.departmentId);
+            if ((providerIndex === -1) && (departmentIndex === -1)) {
+                return EMPTY_ORDER
+            } else {
+                return order
+            }
+        });
+        return groupOrders
+    }
+
 
     useEffect(() => {
-        const userFilter = curOrders.filter((order) => order.assignedUserId === curUser.userId)
-        const notStarted = userFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
-        const pending = userFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+        let groupFilter = getGroupOrders(curOrders);
+        groupFilter = groupFilter.filter((order) => order.id !== 0);
+        const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
                                             order.authStatus === AuthStatusType.PENDING_P2P);
-        const completed =  userFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+        const completed =  groupFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
                                             order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
-        const scheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+        const scheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED);
-        const notScheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+        const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+
         setNotStarted(notStarted.length);
         setPending(pending.length);
         setCompleted(completed.length);
         setScheduled(scheduled.length);
         setNotScheduled(notScheduled.length);
-    },[statusUpdate,curUser])
+    },[authStatusInfo, curOrders,curGroup])
 
 
 
     useEffect(()=> {
-        const userFilter = curOrders.filter((order) => order.assignedUserId === curUser.userId)
-        const notStarted = userFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
-        const pending = userFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
+        console.log('setting row data');
+        let groupFilter = getGroupOrders(curOrders);
+        groupFilter = groupFilter.filter((order) => order.id !== 0);
+        const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED);
+        const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
                                             order.authStatus === AuthStatusType.PENDING_P2P);
-        const completed =  userFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
+        const completed =  groupFilter.filter((order)=> order.authStatus === AuthStatusType.OBTAINED ||
                                             order.authStatus === AuthStatusType.DENIED ||  order.authStatus === AuthStatusType.NO_AUTH_REQUIRED);
-        const scheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
+        const scheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.OUTSIDE_FACILITY ||
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED);
-        const notScheduled = userFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
+        const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED);
 
         if (selectedHeading === SelectedHeadings.NOT_STARTED) {
             setRowData(notStarted);
@@ -115,22 +139,9 @@ const AssignTasks = () => {
             setRowData(notScheduled);
         }
 
-
-    },[selectedHeading, curOrders,curUser])
+    },[selectedHeading, curOrders,authStatusInfo,curGroup])
     
-    const onAuthChange = (orderId: number, authStatus:AuthStatusType) => {
-        const orderIndex = curOrders.findIndex((order) => order.id === orderId)
-        if (orderIndex === -1) {
-            return 
-        }
-        const newOrder = curOrders[orderIndex]
-        const newOrders = [...curOrders];
-        const filteredOrders = newOrders.filter((order) => order.id !== orderId);
-        newOrder.authStatus = authStatus;
-        dispatch(setOrders([...filteredOrders, newOrder]));
-        const newStatus:StatusUpdateInfo = {orderId,type:StatusUpdateTypes.AUTH,status:authStatus}
-        dispatch(setStatusUpdate(newStatus))
-    }
+
 
     const onAssignUserChange = (orderId: number, userId:number) => {
         const orderIndex = curOrders.findIndex((order) => order.id === orderId)
@@ -192,7 +203,9 @@ const AssignTasks = () => {
                 } 
                 return order;
             }) 
-            setRowData(ordersWithPatientName)
+            let groupFilter = getGroupOrders(ordersWithPatientName);
+            groupFilter = groupFilter.filter((order) => order.id !== 0);
+            setRowData(groupFilter)
         }
     },[])
 
