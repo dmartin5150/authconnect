@@ -2,7 +2,7 @@ import { Department } from "../store/OrderTasks/orderTasks.types";
 
 
 
-export const departments:Department[] = [
+export const DEPARTMENTS:Department[] = [
     {departmentName: 'Cardiology', departmentId:1},
     {departmentName: 'Endocrinology', departmentId:2},
     {departmentName: 'Gastroenterology', departmentId:3},

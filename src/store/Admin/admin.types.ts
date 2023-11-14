@@ -1,0 +1,9 @@
+
+
+export enum  ADMIN_TYPES {
+    SET_USERS = 'admin/SET_USERS',
+    SET_DEPARTMENTS = 'admin/SET_DEPARTMENTS',
+    SET_PATIENTS = 'admin/SET_PATIENTS',
+    SET_GROUPS = 'admin/SET_GROUPS',
+    SET_PROVIDERS = 'admin/SET_PROVIDERS',
+}

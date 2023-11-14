@@ -23,9 +23,8 @@ import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpd
 import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.actions';
 import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
-import { GROUPS } from '../Data/groupData';
 import { EMPTY_ORDER } from '../Data/orderData';
-import { USERS } from '../Data/userData';
+import { selectUsers } from '../store/Admin/selectors/admin.selectors';
 
 
 
@@ -39,6 +38,7 @@ const AssignTasks = () => {
     const statusUpdate = useSelector(selectStatusUpdate);
     const curGroup = useSelector(selectGroup);
     const authStatusInfo = useSelector(selectAuthStatusInfo);
+    const users = useSelector(selectUsers)
     const dispatch = useDispatch();
 
 
@@ -65,7 +65,7 @@ const AssignTasks = () => {
     useEffect(() => {
         if (authStatusInfo.orderId !== -1){
             const now = new Date();
-            const userName = USERS.filter((user) => user.userId === authStatusInfo.userId)[0].userName;
+            const userName = users.filter((user) => user.userId === authStatusInfo.userId)[0].userName;
             const note = `User reassigned to ${userName}`;
             const newNote:ActionNote = {orderId: authStatusInfo.orderId, userName:userName, data:note, timeStamp:now};
             dispatch(setActionNotes([...actionNotes, newNote]))

@@ -15,7 +15,7 @@ const METRICS_INITIAL_STATE: MetricsState = {
 
 export const MetricsReducer = (state=METRICS_INITIAL_STATE, action: AnyAction):MetricsState =>  {
     if (setGroupMetrics.match(action)) {
-        return { ...state, groupMetrics: action.payload}
+        return { ...state, groupMetrics:action.payload}
     }
     return state;
 }

@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { ICellRendererParams} from "ag-grid-community";
-import { USERS } from '../Data/userData';
 import { User } from '../store/OrderTasks/orderTasks.types';
 import { selectGroup } from '../store/AssignTasks/selectors/AssignTasks.selectors';
+import { selectUsers } from '../store/Admin/selectors/admin.selectors';
+
 import {useSelector, useDispatch} from 'react-redux';
 import { UNASSIGNED_USER } from '../Data/userData';
 import classnames from "classnames";
@@ -18,10 +19,11 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
     const [userList, setUserList] = useState<User[]>([])
 
     const curGroup = useSelector(selectGroup);
+    const users = useSelector(selectUsers)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        let curUsers = USERS.map((user) => {
+        let curUsers = users.map((user) => {
             if(user.groupIds.indexOf(curGroup.groupId) !== -1) {
                 return user
             }
@@ -30,7 +32,7 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
         curUsers = curUsers.filter((user) => user.userId !== 0);
         curUsers.push(UNASSIGNED_USER);
         setUserList(curUsers);
-    },[curGroup])
+    },[curGroup, users])
 
 
 
