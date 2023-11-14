@@ -32,6 +32,7 @@ function Admin() {
     const [providerItems, setProviderItems] = useState<GroupItem[]>([])
     const [userItems, setUserItems] = useState<GroupItem[]>([])
     const [departmentItems, setDepartmentItems] = useState<GroupItem[]>([])
+    const [itemsUpdated, setItemsUpdated] = useState(false);
 
 
     const curGroup = useSelector(selectGroup);
@@ -43,9 +44,6 @@ function Admin() {
     const dispatch = useDispatch();
 
 
-    useEffect(()=> {
-        dispatch(setEditMode(EDIT_MODES.EDIT_NEW_GROUP));
-    }, [curGroup, groups])
 
     useEffect(()=> {
         console.log('edit mode changed')
@@ -129,13 +127,16 @@ function Admin() {
                uItems = [{itemId: '0', description: 'No Users Selected'}] 
             }
             setUserItems(uItems);
+            setItemsUpdated(!itemsUpdated);
         }
     }, [curGroup,groups ])
 
     useEffect(() => {
-        if (editMode) {
+        console.log('curGroup', curGroup, 'editMode', editMode)
+        if (!typeof(editMode) !== undefined ) {
             if (editMode === EDIT_MODES.EDIT_DEPT) {
                 const select = departmentItems.map((item) => item.itemId.toString());
+                console.log('updating selected', select)
                 setSelected(select)
             }
             if (editMode === EDIT_MODES.EDIT_PROVIDERS) {
@@ -147,7 +148,7 @@ function Admin() {
                 setSelected(selectedUsers)
             }
         }
-    },[editMode, curGroup, groups])
+    },[editMode, curGroup, groups, itemsUpdated])
 
 
     const onEditDept = (event:React.MouseEvent<HTMLButtonElement>) => {
