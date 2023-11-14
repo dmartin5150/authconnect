@@ -171,11 +171,28 @@ function Admin() {
     const handleGroupChange = (value:string[]) => {
         const updatedNumber = value.map((value)=> +value)
         console.log('value', value);
+        let updatedGroup:Group;
         if (editMode === EDIT_MODES.EDIT_DEPT) {
             const updatedGroup = {...curGroup }
             updatedGroup.departmentIds = updatedNumber;
             let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
-            updatedGroups = [...updatedGroups, updatedGroup]
+            updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
+            dispatch(setGroups(updatedGroups));
+            dispatch(setGroup(updatedGroup))
+        }
+        if (editMode === EDIT_MODES.EDIT_PROVIDERS) {
+            const updatedGroup = {...curGroup }
+            updatedGroup.providerIds = updatedNumber;
+            let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
+            updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
+            dispatch(setGroups(updatedGroups));
+            dispatch(setGroup(updatedGroup))
+        }
+        if (editMode === EDIT_MODES.EDIT_USERS) {
+            const updatedGroup = {...curGroup }
+            updatedGroup.userIds = updatedNumber;
+            let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
+            updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
             dispatch(setGroups(updatedGroups));
             dispatch(setGroup(updatedGroup))
         }
