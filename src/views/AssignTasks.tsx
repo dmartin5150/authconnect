@@ -181,7 +181,7 @@ const AssignTasks = () => {
         {headerName: 'Carrier', field: 'carrier', flex:0.5},
         {headerName: 'Patient', field: 'patientName', flex:0.7},
         {headerName: 'Department', field: 'departmentId',flex:0.6},
-        {headerName: 'Assigned User', field: 'assignedUserId',flex:0.7,
+        {headerName: 'Assigned User', field: 'assignedUserId',flex:1,
         cellRenderer:AssignedUserDropdown,
         cellRendererParams:{onAssignUserChange: onAssignUserChange}},
         {headerName: 'Last Updated', field: 'lastUpdated', flex:0.5},

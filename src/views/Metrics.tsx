@@ -127,16 +127,18 @@ const Metrics = () => {
     }
 
 
-    const getGroupMetrics = (groupUsers:GroupUser[], notStarted:Order[],pending:Order[], completed:Order[],scheduled:Order[],notScheduled:Order[]) => {
-        const groupMetrics:GroupMetric[] = groupUsers.map((user) => {
-            const notStartedCount = notStarted.filter((order) => order.assignedUserId === user.userId).length;
-            const pendingCount = pending.filter((order) => order.assignedUserId === user.userId).length;
-            const completedCount = completed.filter((order) => order.assignedUserId === user.userId).length;
-            const scheduledCount = scheduled.filter((order) => order.assignedUserId === user.userId).length;
-            const notScheduledCount  = notScheduled.filter((order) => order.assignedUserId === user.userId).length;
+    const getGroupMetrics = (groupUsers:number[], notStarted:Order[],pending:Order[], completed:Order[],scheduled:Order[],notScheduled:Order[]) => {
+
+        const groupMetrics:GroupMetric[] = groupUsers.map((curUserId) => {
+            const notStartedCount = notStarted.filter((order) => order.assignedUserId === curUserId).length;
+            const pendingCount = pending.filter((order) => order.assignedUserId === curUserId).length;
+            const completedCount = completed.filter((order) => order.assignedUserId === curUserId).length;
+            const scheduledCount = scheduled.filter((order) => order.assignedUserId === curUserId).length;
+            const notScheduledCount  = notScheduled.filter((order) => order.assignedUserId === curUserId).length;
             const authTotals = notStartedCount + pendingCount + completedCount;
             const scheduledTotals = scheduledCount + notScheduledCount;
-            return {userId:user.userId, userName:user.userName, notStartedCount,pendingCount,completedCount,scheduledCount,notScheduledCount,authTotals,scheduledTotals }
+            const userName = users.filter((user) => user.userId === curUserId )[0].userName
+            return {userId:curUserId, userName, notStartedCount,pendingCount,completedCount,scheduledCount,notScheduledCount,authTotals,scheduledTotals }
         });
         return groupMetrics;
     }
@@ -145,6 +147,8 @@ const Metrics = () => {
     useEffect(()=> {
         let groupFilter = getGroupOrders(curOrders);
         groupFilter = Array.from(new Set(groupFilter.filter((order) => order.id !== 0)));
+        const assignedUserIds:number[] = Array.from(new Set(groupFilter.map((order) => order.assignedUserId)))
+        console.log('assignedUsers', assignedUserIds)
         const groupUsers = getGroupUsers(groupFilter);
         const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED).sort((a,b) => a.id - b.id);;
         const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||
@@ -155,8 +159,7 @@ const Metrics = () => {
                                             order.scheduleStatus === ScheduleStatusType.SCHEDULED).sort((a,b) => a.id - b.id);;
         const notScheduled = groupFilter.filter((order)=> order.scheduleStatus === ScheduleStatusType.NOT_SCHEDULED).sort((a,b) => a.id - b.id);;
 
-        const groupMetrics:GroupMetric[] = getGroupMetrics(groupUsers, notStarted,pending, completed, scheduled, notScheduled);
-
+        let groupMetrics:GroupMetric[] = getGroupMetrics(assignedUserIds, notStarted,pending, completed, scheduled, notScheduled);
         setRowData(groupMetrics);
 
     },[selectedHeading, curOrders,authStatusInfo,curGroup])
