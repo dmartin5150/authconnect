@@ -176,7 +176,7 @@ function Admin() {
             const updatedGroup = {...curGroup }
             updatedGroup.departmentIds = updatedNumber;
             let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
-            updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
+            updatedGroups = [...updatedGroups, updatedGroup]
             dispatch(setGroups(updatedGroups));
             dispatch(setGroup(updatedGroup))
         }
@@ -212,8 +212,12 @@ function Admin() {
                             <button className='admin-controls-buttons' onClick={onEditUsers}>Edit Users</button>
                         </div>
                         <div className='admin-controls-buttons-section'>
-                            <button className='admin-controls-buttons right' onClick={onAddGroup}>Add New Group</button>
+                            <button className='admin-controls-buttons right' onClick={()=>{}}>Edit Group Name</button>
                             <button className='admin-controls-buttons' onClick={onEditProviders}>Edit Providers</button>
+                        </div>
+                        <div className='admin-controls-buttons-section'>
+                            <button className='admin-controls-buttons right' onClick={onAddGroup}>Add New Group</button>
+                            <button className='admin-controls-buttons' onClick={()=>{}}>Delete Group</button>
                         </div>
                     </div>
                 </div>
