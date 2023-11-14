@@ -45,9 +45,9 @@ function Admin() {
 
 
 
-    useEffect(()=> {
-        console.log('edit mode changed')
-    },[editMode])
+    // useEffect(()=> {
+    //     console.log('edit mode changed')
+    // },[editMode])
 
     useEffect(()=> {
         if(editMode) {
@@ -132,11 +132,9 @@ function Admin() {
     }, [curGroup,groups ])
 
     useEffect(() => {
-        console.log('curGroup', curGroup, 'editMode', editMode)
         if (!typeof(editMode) !== undefined ) {
             if (editMode === EDIT_MODES.EDIT_DEPT) {
                 const select = departmentItems.map((item) => item.itemId.toString());
-                console.log('updating selected', select)
                 setSelected(select)
             }
             if (editMode === EDIT_MODES.EDIT_PROVIDERS) {
