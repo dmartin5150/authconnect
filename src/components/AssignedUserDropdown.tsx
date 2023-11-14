@@ -23,12 +23,16 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
     const dispatch = useDispatch();
 
     useEffect(() => {
-        let curUsers = users.map((user) => {
-            if(user.groupIds.indexOf(curGroup.groupId) !== -1) {
+        let curUsers = [];
+        curUsers = users.map((user) => {
+            console.log('cur group users', curGroup.userIds)
+            console.log('user', user)
+            if(curGroup.userIds.indexOf(user.userId) !== -1) {
                 return user
             }
             return UNASSIGNED_USER;
         });
+        console.log('curUsers', curUsers)
         curUsers = curUsers.filter((user) => user.userId !== 0);
         curUsers.push(UNASSIGNED_USER);
         setUserList(curUsers);
