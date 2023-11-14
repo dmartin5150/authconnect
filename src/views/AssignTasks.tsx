@@ -24,7 +24,8 @@ import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.acti
 import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
 import { EMPTY_ORDER } from '../Data/orderData';
-import { selectUsers } from '../store/Admin/selectors/admin.selectors';
+import { selectUsers, selectGroups } from '../store/Admin/selectors/admin.selectors';
+
 
 
 
@@ -38,7 +39,8 @@ const AssignTasks = () => {
     const statusUpdate = useSelector(selectStatusUpdate);
     const curGroup = useSelector(selectGroup);
     const authStatusInfo = useSelector(selectAuthStatusInfo);
-    const users = useSelector(selectUsers)
+    const users = useSelector(selectUsers);
+    const groups = useSelector(selectGroups)
     const dispatch = useDispatch();
 
 
@@ -246,7 +248,7 @@ const AssignTasks = () => {
                 </div>
                 <div className='status-group' >
                     <label className='status-group-label'>Current Group:</label>
-                    <GroupDropdown />
+                    <GroupDropdown groups={groups}includeUnassigned={true} />
                 </div>
             </div>
             {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}

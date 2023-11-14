@@ -1,19 +1,29 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { setGroup } from '../store/AssignTasks/actions/AssignTasks.actions';
 import { useDispatch, useSelector} from 'react-redux';
-import { selectGroups } from '../store/Admin/selectors/admin.selectors';
+import { selectGroups, selectGroupswithoutUnassigned } from '../store/Admin/selectors/admin.selectors';
+import { Group } from '../store/OrderTasks/orderTasks.types';
+
+
+interface GroupDropDownProps {
+    groups: Group[];
+    includeUnassigned: boolean;
+}
 
 
 
-
-
-
-const GroupDropdown: React.FC = () => {
+const GroupDropdown: React.FC<GroupDropDownProps> = ({groups, includeUnassigned=true}) => {
 
     const [selectedGroup, setSelectedGroup] = useState('0');
     const dispatch = useDispatch();
-    const groups = useSelector(selectGroups)
+
+    const groupswithoutUnassigned = useSelector(selectGroupswithoutUnassigned)
+    
+
+    useEffect(() => {
+        setSelectedGroup('1');
+    },[]);
 
 
     const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
@@ -27,7 +37,10 @@ const GroupDropdown: React.FC = () => {
     return(
         <div>
             <select value={selectedGroup} onChange={onChange}>
-                {groups.map((group) => {
+                {includeUnassigned && groups.map((group) => {
+                    return <option key={group.groupId} value={group.groupId}>{group.groupName}</option>
+                })}
+                {!includeUnassigned && groupswithoutUnassigned.map((group) => {
                     return <option key={group.groupId} value={group.groupId}>{group.groupName}</option>
                 })}
             </select>

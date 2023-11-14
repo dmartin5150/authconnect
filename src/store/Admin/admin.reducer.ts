@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { User,Group,Patient,Department,Provider } from "../OrderTasks/orderTasks.types";
-import { setUsers, setDepartments,setGroups,setPatients,setProviders} from "./actions/admin.actions";
+import { EDIT_MODES } from "./admin.types";
+import { setUsers, setDepartments,setGroups,setPatients,setProviders, setEditMode} from "./actions/admin.actions";
 import { USERS } from "../../Data/userData";
 import { DEPARTMENTS } from "../../Data/departmentData";
 import { PROVIDERS } from "../../Data/providerData";
@@ -14,7 +15,8 @@ export type AdminState = {
     groups: Group[],
     patients: Patient[],
     departments: Department[],
-    providers:Provider[]
+    providers:Provider[],
+    editMode:EDIT_MODES
 }
 
 const ADMIN_INITIAL_STATE: AdminState = {
@@ -22,7 +24,8 @@ const ADMIN_INITIAL_STATE: AdminState = {
     groups:GROUPS,
     patients:PATIENTS,
     departments: DEPARTMENTS,
-    providers:PROVIDERS
+    providers:PROVIDERS,
+    editMode: EDIT_MODES.EDIT_DEPT
 }
 
 
@@ -42,6 +45,9 @@ export const AdminReducer = (state=ADMIN_INITIAL_STATE, action: AnyAction):Admin
     }
     if (setProviders.match(action)) {
         return { ...state, providers:action.payload}
+    }
+    if (setEditMode.match(action)) {
+        return { ...state, editMode:action.payload}
     }
 
     return state;

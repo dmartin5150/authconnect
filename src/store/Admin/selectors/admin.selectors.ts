@@ -1,6 +1,7 @@
 import { RootState } from "../../store";
 import { createSelector } from "reselect";
 import { AdminState } from "../admin.reducer"; 
+import { selectGroup } from "../../AssignTasks/selectors/AssignTasks.selectors";
 
 const selectAdminReducer = (state:RootState):AdminState => state.admin
 
@@ -27,4 +28,15 @@ export const selectPatients = createSelector(
 export const selectGroups = createSelector(
     [selectAdminReducer],
     (adminTaskSlice) => adminTaskSlice.groups
+);
+
+
+export const selectGroupswithoutUnassigned = createSelector(
+    [selectAdminReducer],
+    (adminTaskSlice) => adminTaskSlice.groups.filter((group) => group.groupId !== 0)
+);
+
+export const selectEditMode = createSelector(
+    [selectAdminReducer,selectGroup],
+    (adminTaskSlice) => adminTaskSlice.editMode
 );

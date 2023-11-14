@@ -48,6 +48,12 @@
     .admin-dualbox{
         width: 30%;
         margin-left:3rem;
+        font-weight: bold;
+        text-align: center;
+
+        .admin-dualbox-label {
+            font-weight: bold;  
+        }
 
     }
     .admin-grouplist {
@@ -55,7 +61,7 @@
         margin: 2rem auto;
         display:flex;
         flex-direction:row;
-        align-items: center;
+        align-items: flex-start;
         justify-content:center
     }
 

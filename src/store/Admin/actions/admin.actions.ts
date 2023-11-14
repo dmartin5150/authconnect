@@ -1,6 +1,7 @@
 import { User, Provider, Group, Department, Patient} from "../../OrderTasks/orderTasks.types"
 import { createAction, ActionWithPayload, withMatcher, Action } from "../../../utilities/reducer/reducerutils";
-import { ADMIN_TYPES } from "../admin.types";
+import { ADMIN_TYPES, EDIT_MODES } from "../admin.types";
+
 
 
 
@@ -9,6 +10,9 @@ export type SetProviders = ActionWithPayload<ADMIN_TYPES.SET_PROVIDERS, Provider
 export type SetGroups = ActionWithPayload<ADMIN_TYPES.SET_GROUPS, Group[]>;
 export type SetDepartments = ActionWithPayload<ADMIN_TYPES.SET_DEPARTMENTS, Department[]>;
 export type SetPatients = ActionWithPayload<ADMIN_TYPES.SET_PATIENTS, Patient[]>;
+export type SetEditMode = ActionWithPayload<ADMIN_TYPES.SET_EDIT_MODE, EDIT_MODES>
+
+
 
 
 export const setUsers= withMatcher((users: User[]): SetUsers => {
@@ -31,6 +35,13 @@ export const setDepartments= withMatcher((departments: Department[]): SetDepartm
 export const setPatients= withMatcher((patients: Patient[]): SetPatients => {
     return createAction(ADMIN_TYPES.SET_PATIENTS, patients);
 });
+
+export const setEditMode= withMatcher((editMode: EDIT_MODES): SetEditMode => {
+    return createAction(ADMIN_TYPES.SET_EDIT_MODE, editMode);
+});
+
+
+
 
 
 

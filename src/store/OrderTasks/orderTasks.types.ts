@@ -149,5 +149,6 @@ export type Group = {
     groupName:string;
     providerIds: number[];
     departmentIds:number[];
+    userIds:number[];
 }
 
