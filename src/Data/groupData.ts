@@ -3,10 +3,13 @@
  
 
 export const GROUPS:Group[] = [
-    {groupId:0,groupName:'Unassigned', providerIds: [],departmentIds:[],userIds:[] },
-    {groupId:1,groupName:'Group1', providerIds: [1,3,4],departmentIds:[111111,333333],userIds:[1,3] },
-    {groupId:2,groupName:'Group2', providerIds: [2,4],departmentIds:[222222,333333],userIds:[] },
-    {groupId:3,groupName:'Group3', providerIds: [1,2],departmentIds:[222222,444444],userIds:[]},
-    {groupId:4,groupName:'Group4', providerIds: [3,5,7],departmentIds:[111111,333333,444444], userIds:[]},
-    {groupId:5,groupName:'Group5', providerIds: [5,6,7],departmentIds:[222222], userIds:[]}
+    {groupId:0,groupName:'Unassigned', providerIds: [],departmentIds:[],userIds:[],isActive:true },
+    {groupId:1,groupName:'Group1', providerIds: [1,3,4],departmentIds:[111111,333333],userIds:[1,3],isActive:true },
+    {groupId:2,groupName:'Group2', providerIds: [2,4],departmentIds:[222222,333333],userIds:[],isActive:true },
+    {groupId:3,groupName:'Group3', providerIds: [1,2],departmentIds:[222222,444444],userIds:[],isActive:true},
+    {groupId:4,groupName:'Group4', providerIds: [3,5,7],departmentIds:[111111,333333,444444], userIds:[],isActive:true},
+    {groupId:5,groupName:'Group5', providerIds: [5,6,7],departmentIds:[222222], userIds:[],isActive:true}
 ]
+
+export const EMPTY_GROUP:Group =
+    {groupId:0,groupName:'New Group', providerIds: [],departmentIds:[],userIds:[],isActive:true }

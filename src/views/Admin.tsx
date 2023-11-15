@@ -8,6 +8,7 @@ import { selectProviders,selectDepartments,selectUsers, selectEditMode} from '..
 import { EDIT_MODES } from '../store/Admin/admin.types';
 import { setEditMode } from '../store/Admin/actions/admin.actions';
 import { Group } from '../store/OrderTasks/orderTasks.types';
+import { EMPTY_GROUP } from '../Data/groupData';
 
 import DualListBox from 'react-dual-listbox';
 import { GroupItem } from '../components/GroupList';
@@ -27,6 +28,9 @@ type Option = {
 
 
 function Admin() {
+
+
+
     const [options, setOptions] = useState<Option[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
     const [providerItems, setProviderItems] = useState<GroupItem[]>([])
@@ -34,7 +38,9 @@ function Admin() {
     const [departmentItems, setDepartmentItems] = useState<GroupItem[]>([])
     const [itemsUpdated, setItemsUpdated] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [messageHead, setMessageHead] = useState('');
     const [messageText, setMessageText] = useState('');
+    const [messageSubmitFxn, setMessageSubmitFxn] = useState<()=> (input:string)=>void>(()=>()=>{})
 
 
     const curGroup = useSelector(selectGroup);
@@ -45,7 +51,7 @@ function Admin() {
     const groups = useSelector(selectGroups)
     const dispatch = useDispatch();
 
-
+    console.log('groups', groups)
 
 
 
@@ -158,9 +164,23 @@ function Admin() {
         dispatch(setEditMode(EDIT_MODES.EDIT_USERS))
     }
 
+    const handleCreateGroup = () => (groupName:string) => {
+        if (groupName?.trim().length !== 0) {
+            const editedGroup = EMPTY_GROUP
+            editedGroup.groupId = groups.length;
+            editedGroup.groupName = groupName;
+            dispatch(setGroup(editedGroup));
+            dispatch(setGroups([...groups, editedGroup].sort((a,b)=> a.groupId - b.groupId)))
+        }
+        setShowModal(false)
+    }
     
     const handleAddGroup = (event:React.MouseEvent<HTMLButtonElement>) => {
-        dispatch(setEditMode(EDIT_MODES.NEW_GROUP))
+        dispatch(setEditMode(EDIT_MODES.NEW_GROUP));
+        setMessageText('');
+        setMessageHead('Select Group Name:');
+        setMessageSubmitFxn(handleCreateGroup);
+        setShowModal(true);
     }
 
     const handleEditProviders = (event:React.MouseEvent<HTMLButtonElement>) => {
@@ -168,21 +188,7 @@ function Admin() {
     }
 
 
-
-
-
-    
-
-    const handleEditGroupName = (event:React.MouseEvent<HTMLButtonElement>) => {
-        setMessageText(curGroup.groupName);
-        setShowModal(true);
-    }
-
-    const handleModalCancel = () => {
-        console.log('cancelled');
-    }
-
-    const handleModalSubmit = (groupName:string) => {
+    const handleModalNameChange = () => (groupName:string) => {
         if (groupName.trim().length !== 0) {
             const editedGroup = {...curGroup};
             editedGroup.groupName = groupName;
@@ -193,6 +199,27 @@ function Admin() {
         }
         setShowModal(false)
     }
+
+    const handleEditGroupName = (event:React.MouseEvent<HTMLButtonElement>) => {
+        setMessageText(curGroup.groupName);
+        setMessageHead('Group Name:');
+        setMessageSubmitFxn(handleModalNameChange);
+        setShowModal(true);
+    }
+
+    const handleModalCancel = () => {
+        setShowModal(false);
+    }
+
+    const handleRemoveGroup = () => {
+        const editedGroup = {...curGroup};
+        editedGroup.isActive = false;
+        dispatch(setGroup(editedGroup));
+        let editedGroups = [...groups];
+        editedGroups = editedGroups.filter((group) => group.groupId !== editedGroup.groupId)
+        dispatch(setGroups([...editedGroups, editedGroup].sort((a,b)=> a.groupId - b.groupId)))
+    }
+
 
     const handleGroupChange = (value:string[]) => {
         const updatedNumber = value.map((value)=> +value)
@@ -225,7 +252,7 @@ function Admin() {
 
     return (
         <div className='admin'>
-            {showModal && <MessageModal heading='Group Name:' messageText={messageText} onModalSubmit={handleModalSubmit} onModalCancel={handleModalCancel} classIsOpen={showModal} />}
+            {showModal && <MessageModal heading={messageHead} messageText={messageText} onModalSubmit={messageSubmitFxn} onModalCancel={handleModalCancel} classIsOpen={showModal} />}
             <div className='admin-controls'>
                 <div className='admin-controls-groups'>
                     <div className='admin-controls-groupdropdown'>
@@ -243,7 +270,7 @@ function Admin() {
                         </div>
                         <div className='admin-controls-buttons-section'>
                             <button className='admin-controls-buttons right' onClick={handleAddGroup}>Add New Group</button>
-                            <button className='admin-controls-buttons' onClick={()=>{}}>Delete Group</button>
+                            <button className='admin-controls-buttons' onClick={handleRemoveGroup}>Remove Group</button>
                         </div>
                     </div>
                 </div>

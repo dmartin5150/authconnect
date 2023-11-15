@@ -150,5 +150,6 @@ export type Group = {
     providerIds: number[];
     departmentIds:number[];
     userIds:number[];
+    isActive:boolean;
 }
 

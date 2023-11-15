@@ -27,13 +27,13 @@ export const selectPatients = createSelector(
 
 export const selectGroups = createSelector(
     [selectAdminReducer],
-    (adminTaskSlice) => adminTaskSlice.groups
+    (adminTaskSlice) => adminTaskSlice.groups.filter((group) => group.isActive)
 );
 
 
 export const selectGroupswithoutUnassigned = createSelector(
     [selectAdminReducer],
-    (adminTaskSlice) => adminTaskSlice.groups.filter((group) => group.groupId !== 0)
+    (adminTaskSlice) => adminTaskSlice.groups.filter((group) => group.groupId !== 0).filter((group)=> group.isActive)
 );
 
 export const selectEditMode = createSelector(

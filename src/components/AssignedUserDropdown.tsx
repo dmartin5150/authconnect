@@ -45,7 +45,6 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
 
 
     const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
-        console.log('changeing')
         const orderId = (props as ICellRendererParams).data.id;
         setAssignedUser(event.target.value);
         onAssignUserChange(orderId, +event.target.value);
