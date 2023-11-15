@@ -45,9 +45,7 @@ function Admin() {
 
 
 
-    // useEffect(()=> {
-    //     console.log('edit mode changed')
-    // },[editMode])
+
 
     useEffect(()=> {
         if(editMode) {
@@ -170,7 +168,6 @@ function Admin() {
 
     const handleGroupChange = (value:string[]) => {
         const updatedNumber = value.map((value)=> +value)
-        console.log('value', value);
         let updatedGroup:Group;
         if (editMode === EDIT_MODES.EDIT_DEPT) {
             const updatedGroup = {...curGroup }

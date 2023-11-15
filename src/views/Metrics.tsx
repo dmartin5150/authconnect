@@ -148,7 +148,6 @@ const Metrics = () => {
         let groupFilter = getGroupOrders(curOrders);
         groupFilter = Array.from(new Set(groupFilter.filter((order) => order.id !== 0)));
         const assignedUserIds:number[] = Array.from(new Set(groupFilter.map((order) => order.assignedUserId)))
-        console.log('assignedUsers', assignedUserIds)
         const groupUsers = getGroupUsers(groupFilter);
         const notStarted = groupFilter.filter((order)=> order.authStatus === AuthStatusType.NOT_STARTED).sort((a,b) => a.id - b.id);;
         const pending = groupFilter.filter((order)=> order.authStatus === AuthStatusType.PENDING ||

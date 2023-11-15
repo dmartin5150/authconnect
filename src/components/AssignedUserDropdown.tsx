@@ -25,14 +25,11 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
     useEffect(() => {
         let curUsers = [];
         curUsers = users.map((user) => {
-            console.log('cur group users', curGroup.userIds)
-            console.log('user', user)
             if(curGroup.userIds.indexOf(user.userId) !== -1) {
                 return user
             }
             return UNASSIGNED_USER;
         });
-        console.log('curUsers', curUsers)
         curUsers = curUsers.filter((user) => user.userId !== 0);
         curUsers.push(UNASSIGNED_USER);
         setUserList(curUsers);
@@ -41,11 +38,14 @@ const AssignedUserDropdown: React.FC<AssignUserDropdownProps> = ({onAssignUserCh
 
 
     useEffect (()=> {
-        setAssignedUser((props as ICellRendererParams).data.assignedUserId);
+        if ((props as ICellRendererParams).data.assignedUserId !== assignedUser){
+            setAssignedUser((props as ICellRendererParams).data.assignedUserId);
+        }
     },[(props as ICellRendererParams).data.assignedUserId])
 
 
     const onChange = (event:React.ChangeEvent<HTMLSelectElement> ) => {
+        console.log('changeing')
         const orderId = (props as ICellRendererParams).data.id;
         setAssignedUser(event.target.value);
         onAssignUserChange(orderId, +event.target.value);
