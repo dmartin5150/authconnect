@@ -21,7 +21,7 @@ import GroupDropdown from '../components/GroupDropdown';
 import AssignedUserDropdown from '../components/AssignedUserDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.actions';
-import CreateNote from '../components/CreateNote';
+import MessageModal from '../components/MessageModal';
 import classnames from "classnames";
 import { EMPTY_ORDER } from '../Data/orderData';
 import { selectUsers, selectGroups } from '../store/Admin/selectors/admin.selectors';
@@ -251,7 +251,7 @@ const AssignTasks = () => {
                     <GroupDropdown groups={groups}includeUnassigned={true} />
                 </div>
             </div>
-            {noteInfo.classIsOpen && <CreateNote classIsOpen={noteInfo.classIsOpen} />}
+            {noteInfo.classIsOpen && <MessageModal heading='Action Note:' messageText=''  classIsOpen={noteInfo.classIsOpen} />}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}
             <AgGridReact 
                 rowData={rowData} 

@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Popup from './popup/popup-component';
 import classnames from "classnames";
-import './CreateNote.css';
+import './MessageModal.css';
 import { setCreateNoteOpen, setActionNotes, setOrders} from '../store/OrderTasks/actions/orderTasks.actions';
 import { CreateNoteInfo } from '../store/OrderTasks/orderTasks.types';
 import { selectUser,selectOrders,selectActionNotes,selectCreateNoteOpen } from '../store/OrderTasks/selectors/orderTasks.selector';
@@ -12,13 +12,15 @@ import { ICellRendererParams} from "ag-grid-community";
 
 
 
-interface CreateNoteProps {
+interface MessageModalProps {
     classIsOpen:boolean;
+    heading:string;
+    messageText:string;
 }
 
 
 
-const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
+const MessageModal: React.FC<MessageModalProps> = ({heading, messageText='', classIsOpen,...props}) => {
 
     const [note, setNote] = useState('');
     const dispatch = useDispatch();
@@ -43,6 +45,11 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
     }
 
 
+    useEffect(() => {
+        if (messageText.trim().length !== 0) {
+            setNote(messageText);
+        }
+    },[])
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -68,7 +75,7 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
             <div className ={classnames("createnote",{open:classIsOpen ? 'open' : ''})}>
             <form className='createnote--form' onSubmit={handleSubmit}>
                 <label>
-                    Action Note:
+                    {heading}
                 </label>
                 <input type="text" value={note} onChange={handleChange} />
                 <div className='createnote--buttons'>
@@ -80,4 +87,4 @@ const CreateNote: React.FC<CreateNoteProps> = ({classIsOpen,...props}) => {
         </Popup>
     )
 }
-export default CreateNote;
+export default MessageModal;
