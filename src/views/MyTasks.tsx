@@ -19,7 +19,7 @@ import PriorityCell from '../components/PriorityCell';
 import UserDropDown from '../components/UserDropDown';
 import ScheduleStatsDropdown from '../components/ScheduleStatusDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
-import MessageModal from '../components/MessageModal';
+import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
 
 
@@ -235,7 +235,7 @@ const MyTasks = () => {
                     <UserDropDown />
                 </div>
             </div>
-            {noteInfo.classIsOpen && <MessageModal heading='Action Note:' messageText='' classIsOpen={noteInfo.classIsOpen} />}
+            {noteInfo.classIsOpen && <CreateNote heading='Action Note:' messageText='' classIsOpen={noteInfo.classIsOpen} />}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}
             <AgGridReact 
                 rowData={rowData} 

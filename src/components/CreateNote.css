@@ -1,4 +1,4 @@
-.message-modal {
+.createnote {
     width: 30%;
     height:500px;
     margin: 10% auto;
@@ -13,7 +13,7 @@
         display:block;
     }
 
-    .message-modal--form {
+    .createnote--form {
         display:flex;
         flex-direction: column;
         border: 1px solid grey;
@@ -22,15 +22,15 @@
         box-shadow: 2px 2px 5px grey;
         background-color: white;
 
-        .message-modal--buttons {
+        .createnote--buttons {
             display: flex;
             flex-direction: row;
 
 
-            .message-modal--button{
+            .createnote--button{
                 margin-top: 5px; 
             }
-            .message-modal--button.submit{
+            .createnote--button.submit{
                 margin-right: 10px; 
             }
         }

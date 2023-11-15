@@ -4,10 +4,9 @@ import { selectGroups } from '../store/Admin/selectors/admin.selectors';
 import { setGroup } from '../store/AssignTasks/actions/AssignTasks.actions';
 import { setGroups } from '../store/Admin/actions/admin.actions';
 import { selectGroup } from '../store/AssignTasks/selectors/AssignTasks.selectors';
-import { SetGroupDept, setGroupDept } from '../store/AssignTasks/actions/AssignTasks.actions';
 import { selectProviders,selectDepartments,selectUsers, selectEditMode} from '../store/Admin/selectors/admin.selectors';
 import { EDIT_MODES } from '../store/Admin/admin.types';
-import { SetEditMode, setEditMode } from '../store/Admin/actions/admin.actions';
+import { setEditMode } from '../store/Admin/actions/admin.actions';
 import { Group } from '../store/OrderTasks/orderTasks.types';
 
 import DualListBox from 'react-dual-listbox';
@@ -15,6 +14,7 @@ import { GroupItem } from '../components/GroupList';
 import GroupDropdown from '../components/GroupDropdown';
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import './Admin.css'
+import MessageModal from '../components/MessageModal';
 
 import GroupList from '../components/GroupList';
 
@@ -33,6 +33,8 @@ function Admin() {
     const [userItems, setUserItems] = useState<GroupItem[]>([])
     const [departmentItems, setDepartmentItems] = useState<GroupItem[]>([])
     const [itemsUpdated, setItemsUpdated] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [messageText, setMessageText] = useState('');
 
 
     const curGroup = useSelector(selectGroup);
@@ -147,24 +149,50 @@ function Admin() {
     },[editMode, curGroup, groups, itemsUpdated])
 
 
-    const onEditDept = (event:React.MouseEvent<HTMLButtonElement>) => {
+    const handleEditDept = (event:React.MouseEvent<HTMLButtonElement>) => {
         dispatch(setEditMode(EDIT_MODES.EDIT_DEPT))
 
     }
 
-    const onEditUsers = (event:React.MouseEvent<HTMLButtonElement>) => {
+    const handleEditUsers = (event:React.MouseEvent<HTMLButtonElement>) => {
         dispatch(setEditMode(EDIT_MODES.EDIT_USERS))
     }
 
     
-    const onAddGroup = (event:React.MouseEvent<HTMLButtonElement>) => {
+    const handleAddGroup = (event:React.MouseEvent<HTMLButtonElement>) => {
         dispatch(setEditMode(EDIT_MODES.NEW_GROUP))
     }
 
-    const onEditProviders = (event:React.MouseEvent<HTMLButtonElement>) => {
+    const handleEditProviders = (event:React.MouseEvent<HTMLButtonElement>) => {
         dispatch(setEditMode(EDIT_MODES.EDIT_PROVIDERS))
     }
 
+
+
+
+
+    
+
+    const handleEditGroupName = (event:React.MouseEvent<HTMLButtonElement>) => {
+        setMessageText(curGroup.groupName);
+        setShowModal(true);
+    }
+
+    const handleModalCancel = () => {
+        console.log('cancelled');
+    }
+
+    const handleModalSubmit = (groupName:string) => {
+        if (groupName.trim().length !== 0) {
+            const editedGroup = {...curGroup};
+            editedGroup.groupName = groupName;
+            dispatch(setGroup(editedGroup));
+            let editedGroups = [...groups];
+            editedGroups = editedGroups.filter((group) => group.groupId !== editedGroup.groupId)
+            dispatch(setGroups([...editedGroups, editedGroup].sort((a,b)=> a.groupId - b.groupId)))
+        }
+        setShowModal(false)
+    }
 
     const handleGroupChange = (value:string[]) => {
         const updatedNumber = value.map((value)=> +value)
@@ -197,6 +225,7 @@ function Admin() {
 
     return (
         <div className='admin'>
+            {showModal && <MessageModal heading='Group Name:' messageText={messageText} onModalSubmit={handleModalSubmit} onModalCancel={handleModalCancel} classIsOpen={showModal} />}
             <div className='admin-controls'>
                 <div className='admin-controls-groups'>
                     <div className='admin-controls-groupdropdown'>
@@ -205,15 +234,15 @@ function Admin() {
                     </div>
                     <div className='admin-controls-buttons'>
                         <div className='admin-controls-buttons-section'>
-                            <button className='admin-controls-buttons right' onClick={onEditDept}>Edit Department</button>
-                            <button className='admin-controls-buttons' onClick={onEditUsers}>Edit Users</button>
+                            <button className='admin-controls-buttons right' onClick={handleEditDept}>Edit Department</button>
+                            <button className='admin-controls-buttons' onClick={handleEditUsers}>Edit Users</button>
                         </div>
                         <div className='admin-controls-buttons-section'>
-                            <button className='admin-controls-buttons right' onClick={()=>{}}>Edit Group Name</button>
-                            <button className='admin-controls-buttons' onClick={onEditProviders}>Edit Providers</button>
+                            <button className='admin-controls-buttons right' onClick={handleEditGroupName}>Edit Group Name</button>
+                            <button className='admin-controls-buttons' onClick={handleEditProviders}>Edit Providers</button>
                         </div>
                         <div className='admin-controls-buttons-section'>
-                            <button className='admin-controls-buttons right' onClick={onAddGroup}>Add New Group</button>
+                            <button className='admin-controls-buttons right' onClick={handleAddGroup}>Add New Group</button>
                             <button className='admin-controls-buttons' onClick={()=>{}}>Delete Group</button>
                         </div>
                     </div>
@@ -221,7 +250,6 @@ function Admin() {
                 <div className='admin-dualbox'>
                     <label className='admin-dualbox-label'>{editMode}</label>
                     <DualListBox
-                        // canFilter
                         lang={{
                             availableFilterHeader: 'Filter available',
                             availableHeader: 'Available',

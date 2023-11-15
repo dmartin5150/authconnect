@@ -21,7 +21,7 @@ import GroupDropdown from '../components/GroupDropdown';
 import AssignedUserDropdown from '../components/AssignedUserDropdown';
 import { setOrders, setCreateNoteOpen, setViewNotes, setActionNotes,setStatusUpdate } from '../store/OrderTasks/actions/orderTasks.actions';
 import { setAuthStatusInfo } from '../store/AssignTasks/actions/AssignTasks.actions';
-import MessageModal from '../components/MessageModal';
+import CreateNote from '../components/CreateNote';
 import classnames from "classnames";
 import { EMPTY_ORDER } from '../Data/orderData';
 import { GroupUser, GroupMetric } from '../store/Metrics/metrics.types';
@@ -165,29 +165,8 @@ const Metrics = () => {
     
 
 
-    // const onAssignUserChange = (orderId: number, userId:number) => {
-    //     const orderIndex = curOrders.findIndex((order) => order.id === orderId)
-    //     if (orderIndex === -1) {
-    //         return 
-    //     }
-    //     const newOrder = curOrders[orderIndex]
-    //     const newOrders = [...curOrders];
-    //     const filteredOrders = newOrders.filter((order) => order.id !== orderId);
-    //     newOrder.assignedUserId = userId;
-    //     dispatch(setOrders([...filteredOrders, newOrder]));
-    //     const newStatus:AuthStatusInfo = {orderId,userId};
-    //     dispatch(setAuthStatusInfo(newStatus));
-    // }
 
-    // const onAddNote = (orderId: number, actionNote:ActionNote) => {
-    //     const noteInfo:CreateNoteInfo = {orderId,classIsOpen:true};
-    //     dispatch(setCreateNoteOpen(noteInfo));
-    // }
 
-    // const onAddViewHistory = (orderId:number) => {
-    //     const viewInfo:ViewNoteInfo = {orderId,classIsOpen:true};
-    //     dispatch(setViewNotes(viewInfo)); 
-    // }
 
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
     const [rowData, setRowData] = useState<GroupMetric[]>([]);
@@ -253,7 +232,7 @@ const Metrics = () => {
                     <GroupDropdown groups={groups} includeUnassigned={true} />
                 </div>
             </div>
-            {noteInfo.classIsOpen && <MessageModal heading='Action Note:' messageText='' classIsOpen={noteInfo.classIsOpen} />}
+            {/* {noteInfo.classIsOpen && <CreateNote heading='Action Note:' messageText='' classIsOpen={noteInfo.classIsOpen} />} */}
             {viewInfo.classIsOpen && <ShowHistory classIsOpen={viewInfo.classIsOpen} />}
             <AgGridReact 
                 rowData={rowData} 
