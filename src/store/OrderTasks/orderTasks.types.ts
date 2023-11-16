@@ -9,6 +9,16 @@ export enum  ORDATA_TYPES {
     SET_STATUS_UPDATE = 'orderTasks/SET_STATUS_UPDATE',
 }
 
+
+export type IDKeys = 'providerId' | 'departmentId' | 'userId';
+
+
+
+
+export type IDObject = { [k in IDKeys]: number[] };
+
+
+
 export type Provider = {
     id: number;
     firstName: string;
@@ -89,12 +99,6 @@ export type Order = {
     lastUpdated:Date | null;
     patientName:string;
 }
-
-
-
-
-
-
 
 
 

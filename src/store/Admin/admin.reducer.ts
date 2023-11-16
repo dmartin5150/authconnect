@@ -7,6 +7,7 @@ import { DEPARTMENTS } from "../../Data/departmentData";
 import { PROVIDERS } from "../../Data/providerData";
 import { PATIENTS } from "../../Data/patientData";
 import { GROUPS } from "../../Data/groupData";
+import { UNASSIGNED_GROUP } from "../../Data/groupData";
 
 
 
@@ -16,7 +17,9 @@ export type AdminState = {
     patients: Patient[],
     departments: Department[],
     providers:Provider[],
-    editMode:EDIT_MODES
+    editMode:EDIT_MODES,
+
+
 }
 
 const ADMIN_INITIAL_STATE: AdminState = {
@@ -25,7 +28,9 @@ const ADMIN_INITIAL_STATE: AdminState = {
     patients:PATIENTS,
     departments: DEPARTMENTS,
     providers:PROVIDERS,
-    editMode: EDIT_MODES.EDIT_DEPT
+    editMode: EDIT_MODES.EDIT_DEPT,
+
+
 }
 
 
@@ -35,6 +40,7 @@ export const AdminReducer = (state=ADMIN_INITIAL_STATE, action: AnyAction):Admin
         return { ...state, users:action.payload}
     }
     if (setGroups.match(action)) {
+        console.log('updating groups', action)
         return { ...state, groups:action.payload}
     }
     if (setPatients.match(action)) {

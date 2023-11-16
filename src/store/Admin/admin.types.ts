@@ -8,6 +8,7 @@ export enum  ADMIN_TYPES {
     SET_PROVIDERS = 'admin/SET_PROVIDERS',
     SET_EDIT_MODE = 'admin/SET_EDIT_MODE',
 
+
 }
 
 
@@ -18,3 +19,5 @@ export enum EDIT_MODES {
     EDIT_PROVIDERS = 'Edit Providers',
     EDIT_NEW_GROUP = 'Select Item To Edit'
 }
+
+

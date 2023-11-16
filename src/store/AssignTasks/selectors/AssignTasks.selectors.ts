@@ -17,3 +17,8 @@ export const selectAuthStatusInfo = createSelector(
 );
 
 
+export const selectunAssignedGroup = createSelector(
+    [selectAssignTaskReducer],
+    (orderTaskSlice) => orderTaskSlice.unAssigned
+);
+

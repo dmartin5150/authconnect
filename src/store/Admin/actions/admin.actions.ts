@@ -10,7 +10,9 @@ export type SetProviders = ActionWithPayload<ADMIN_TYPES.SET_PROVIDERS, Provider
 export type SetGroups = ActionWithPayload<ADMIN_TYPES.SET_GROUPS, Group[]>;
 export type SetDepartments = ActionWithPayload<ADMIN_TYPES.SET_DEPARTMENTS, Department[]>;
 export type SetPatients = ActionWithPayload<ADMIN_TYPES.SET_PATIENTS, Patient[]>;
-export type SetEditMode = ActionWithPayload<ADMIN_TYPES.SET_EDIT_MODE, EDIT_MODES>
+export type SetEditMode = ActionWithPayload<ADMIN_TYPES.SET_EDIT_MODE, EDIT_MODES>;
+
+
 
 
 
@@ -39,6 +41,7 @@ export const setPatients= withMatcher((patients: Patient[]): SetPatients => {
 export const setEditMode= withMatcher((editMode: EDIT_MODES): SetEditMode => {
     return createAction(ADMIN_TYPES.SET_EDIT_MODE, editMode);
 });
+
 
 
 

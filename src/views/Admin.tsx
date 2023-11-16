@@ -3,20 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectGroups } from '../store/Admin/selectors/admin.selectors';
 import { setGroup } from '../store/AssignTasks/actions/AssignTasks.actions';
 import { setGroups } from '../store/Admin/actions/admin.actions';
+import { setUnassigned } from '../store/AssignTasks/actions/AssignTasks.actions';
 import { selectGroup } from '../store/AssignTasks/selectors/AssignTasks.selectors';
 import { selectProviders,selectDepartments,selectUsers, selectEditMode} from '../store/Admin/selectors/admin.selectors';
 import { EDIT_MODES } from '../store/Admin/admin.types';
 import { setEditMode } from '../store/Admin/actions/admin.actions';
 import { Group } from '../store/OrderTasks/orderTasks.types';
 import { EMPTY_GROUP } from '../Data/groupData';
-
+import { selectunAssignedGroup } from '../store/AssignTasks/selectors/AssignTasks.selectors';
 import DualListBox from 'react-dual-listbox';
 import { GroupItem } from '../components/GroupList';
 import GroupDropdown from '../components/GroupDropdown';
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import './Admin.css'
 import MessageModal from '../components/MessageModal';
-
+import { IDObject } from '../store/OrderTasks/orderTasks.types';
 import GroupList from '../components/GroupList';
 
 
@@ -41,6 +42,9 @@ function Admin() {
     const [messageHead, setMessageHead] = useState('');
     const [messageText, setMessageText] = useState('');
     const [messageSubmitFxn, setMessageSubmitFxn] = useState<()=> (input:string)=>void>(()=>()=>{})
+    const [allProviderIds, setAllProviderIds] = useState<number[]>([]);
+    const [allDepartmentIds, setAllDepartmentIds] = useState<number[]>([]);
+    const [allUserIds, setAllUserIds] = useState<number[]>([]);
 
 
     const curGroup = useSelector(selectGroup);
@@ -48,12 +52,29 @@ function Admin() {
     const departments = useSelector(selectDepartments);
     const users = useSelector(selectUsers);
     const editMode = useSelector(selectEditMode);
-    const groups = useSelector(selectGroups)
+    const groups = useSelector(selectGroups);
+    const unassignedGroup = useSelector(selectunAssignedGroup)
     const dispatch = useDispatch();
 
-    console.log('groups', groups)
+    console.log(groups)
+
+    useEffect(()=> {
+        console.log('groups changed')
+    },[groups])
 
 
+    useEffect(()=> {
+        setAllProviderIds(providers.map((provider) => provider.id));
+        setAllDepartmentIds(departments.map((department) => department.departmentId))
+        setAllUserIds(users.map((user) => user.userId))
+    }, [users, providers, departments])
+
+    useEffect(()=> {
+        const assignedIds = getAssignedIds();
+        const unassigned = getUpdatedUnassignedGroup(assignedIds);
+        console.log('log', unassigned)
+        dispatch(setUnassigned(unassigned))
+    },[groups])
 
     useEffect(()=> {
         if(editMode) {
@@ -190,7 +211,7 @@ function Admin() {
 
     const handleModalNameChange = () => (groupName:string) => {
         if (groupName.trim().length !== 0) {
-            const editedGroup = {...curGroup};
+            const editedGroup = Object.assign({},curGroup);
             editedGroup.groupName = groupName;
             dispatch(setGroup(editedGroup));
             let editedGroups = [...groups];
@@ -211,21 +232,62 @@ function Admin() {
         setShowModal(false);
     }
 
+
+    const getAssignedIds = ():IDObject => {
+        const activeGroups = groups.filter((group) => group.groupId !== 0);
+        let providerIds:number[] =[];
+        let userIds:number[] = [];
+        let departmentIds:number[] = [];
+
+        const groupProviderIds = activeGroups.map((group) => {
+            providerIds = [...providerIds, ...group.providerIds];
+            userIds = [...userIds, ...group.userIds];
+            departmentIds = [...departmentIds, ...group.departmentIds]
+            return [...providerIds]
+        })
+        return {'providerId': Array.from(new Set([...providerIds])),
+                'departmentId':Array.from(new Set([...departmentIds])),
+                'userId': Array.from(new Set([...userIds]))
+        };
+    }
+
+    const getUpdatedUnassignedGroup = (assignedIds:IDObject):Group => {
+        const unAssignedProviderIds = allProviderIds.filter((id) => !assignedIds.providerId.includes(id));
+        const unAssignedDepartmentIds = allDepartmentIds.filter((id) => !assignedIds.departmentId.includes(id));
+        const unAssignedUserIds = allUserIds.filter((id) => !assignedIds.userId.includes(id));
+        const unAssignedGroup:Group = Object.assign({}, unassignedGroup);
+        // console.log('unassigned Group', unAssignedGroup)
+        unAssignedGroup.providerIds = unAssignedProviderIds;
+        unAssignedGroup.departmentIds = unAssignedDepartmentIds;
+        unAssignedGroup.userIds = unAssignedUserIds;
+        return unAssignedGroup
+        
+    }
+
+
+
+
+
+
+
+
     const handleRemoveGroup = () => {
         const editedGroup = {...curGroup};
         editedGroup.isActive = false;
         dispatch(setGroup(editedGroup));
         let editedGroups = [...groups];
-        editedGroups = editedGroups.filter((group) => group.groupId !== editedGroup.groupId)
-        dispatch(setGroups([...editedGroups, editedGroup].sort((a,b)=> a.groupId - b.groupId)))
+        editedGroups = editedGroups.filter((group) => group.groupId !== editedGroup.groupId);
+        dispatch(setGroups([...editedGroups, editedGroup].sort((a,b)=> a.groupId - b.groupId)));
+        
     }
 
 
     const handleGroupChange = (value:string[]) => {
-        const updatedNumber = value.map((value)=> +value)
+        const updatedNumber = value.map((value)=> +value).filter((value) => value != 0);
+        console.log('updated numbers', updatedNumber)
         let updatedGroup:Group;
         if (editMode === EDIT_MODES.EDIT_DEPT) {
-            const updatedGroup = {...curGroup }
+            const updatedGroup = Object.assign({}, curGroup)
             updatedGroup.departmentIds = updatedNumber;
             let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
             updatedGroups = [...updatedGroups, updatedGroup]
@@ -233,7 +295,7 @@ function Admin() {
             dispatch(setGroup(updatedGroup))
         }
         if (editMode === EDIT_MODES.EDIT_PROVIDERS) {
-            const updatedGroup = {...curGroup }
+            const updatedGroup = Object.assign({},curGroup)
             updatedGroup.providerIds = updatedNumber;
             let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
             updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
@@ -241,7 +303,7 @@ function Admin() {
             dispatch(setGroup(updatedGroup))
         }
         if (editMode === EDIT_MODES.EDIT_USERS) {
-            const updatedGroup = {...curGroup }
+            const updatedGroup = Object.assign({},curGroup);
             updatedGroup.userIds = updatedNumber;
             let updatedGroups = groups.filter((group) => group.groupId !== curGroup.groupId);
             updatedGroups = [...updatedGroups, updatedGroup].sort((a,b) => a.groupId - b.groupId)
