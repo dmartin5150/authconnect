@@ -52,6 +52,20 @@ const Navigation = () => {
           to="/Admin">
             Admin
           </NavLink>
+          <NavLink   className="nav__link"
+              style={
+              ({isActive}) => (
+                isActive 
+                ? {
+                  textDecoration: 'none',
+                  color: '#1b4297'
+                  }
+                :{}
+                )
+              }
+          to="/TAOViews">
+            TAO Views
+          </NavLink>
           <NavLink  className="nav__link"
               style={
               ({isActive}) => (

@@ -1,0 +1,68 @@
+.tao-view {
+
+    .admin-controls {
+        display:flex;
+        justify-content: center;
+
+        .admin-controls-groups {
+            display:flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* margin-left: 1rem; */
+            align-items: start;
+            /* margin-right:2rem; */
+            padding: 1rem;
+            width:300px;
+
+            .admin-controls-groupdropdown {
+                display:flex;
+                flex-direction: column;
+                justify-content: left;
+                margin-right:3rem;
+                width:50%;
+            }
+
+        }
+        .admin-controls-buttons {
+            display:flex;
+            flex-direction: column;
+            width:100%;
+            text-align: center;
+            margin:0.5rem 0;
+
+            .admin-controls-buttons-section {
+                display:flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+            }
+            
+            .admin-controls-buttons-section .right {
+                margin-right:10px;
+            }
+
+        }
+    }
+
+
+    .admin-dualbox{
+        width: 30%;
+        margin-left:3rem;
+        font-weight: bold;
+        text-align: center;
+
+        .admin-dualbox-label {
+            font-weight: bold;  
+        }
+
+    }
+    .admin-grouplist {
+        width:65%;
+        margin: 2rem auto;
+        display:flex;
+        flex-direction:row;
+        align-items: flex-start;
+        justify-content:center
+    }
+
+}
