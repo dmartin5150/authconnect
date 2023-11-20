@@ -27,6 +27,7 @@ import { EMPTY_ORDER } from '../Data/orderData';
 import { GroupUser, GroupMetric } from '../store/Metrics/metrics.types';
 import { selectUsers } from '../store/Admin/selectors/admin.selectors';
 import { selectGroups } from '../store/Admin/selectors/admin.selectors';
+import BoldColumn from '../components/BoldColumn';
 
 
 const Metrics = () => {
@@ -178,7 +179,10 @@ const Metrics = () => {
         {headerName: 'Scheduled', field: 'scheduledCount',flex:0.6},
         {headerName: 'Not Scheduled', field: 'notScheduledCount',flex:0.6},
         {headerName: 'Auth Totals', field: 'authTotals',flex:0.6},
-        {headerName: 'Scheduled Totals', field: 'scheduledTotals',flex:0.6},
+        {headerName: 'Auth Totals', field: 'authTotals',flex:0.6,
+            cellRenderer:BoldColumn},
+        {headerName: 'Scheduled Totals', field: 'scheduledTotals',flex:0.6,
+        cellRenderer:BoldColumn},
     ]);
 
 

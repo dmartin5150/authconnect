@@ -318,7 +318,7 @@ function TAOViews() {
             <div className='admin-controls'>
                 <div className='admin-controls-groups'>
                     <div className='admin-controls-groupdropdown'>
-                        <label>Select TAO</label>
+                        <label className='admin-controls-label'>Select TAO</label>
                         <GroupDropdown groups={groups.sort((a,b)=> a.groupId - b.groupId)} includeUnassigned={false} />
                     </div>
                     {/* <div className='admin-controls-buttons'>
