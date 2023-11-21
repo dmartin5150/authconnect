@@ -16,43 +16,7 @@ const Navigation = () => {
               Auth-Connect Radiology
           </div>
         <div className="nav__links-container">
-          <NavLink  className="nav__link"
-            style={
-              ({isActive}) => (
-                isActive 
-                ? {
-                  textDecoration: 'none',
-                  color: '#1b4297'
-                  }
-                :{}
-                )}
-            to="/" end>My Tasks</NavLink>
-                   <NavLink  className="nav__link"
-            style={
-              ({isActive}) => (
-                isActive 
-                ? {
-                  textDecoration: 'none',
-                  color: '#1b4297'
-                  }
-                :{}
-                )}
-            to="/AssignTasks" end>Assign Tasks</NavLink>   
-         <NavLink   className="nav__link"
-              style={
-              ({isActive}) => (
-                isActive 
-                ? {
-                  textDecoration: 'none',
-                  color: '#1b4297'
-                  }
-                :{}
-                )
-              }
-          to="/Admin">
-            Admin
-          </NavLink>
-          <NavLink   className="nav__link"
+        <NavLink   className="nav__link"
               style={
               ({isActive}) => (
                 isActive 
@@ -64,8 +28,30 @@ const Navigation = () => {
                 )
               }
           to="/TAOViews">
-            TAO Views
+            Admin
           </NavLink>
+          <NavLink  className="nav__link"
+            style={
+              ({isActive}) => (
+                isActive 
+                ? {
+                  textDecoration: 'none',
+                  color: '#1b4297'
+                  }
+                :{}
+                )}
+            to="/AssignTasks" end>Assign Tasks</NavLink>  
+          <NavLink  className="nav__link"
+            style={
+              ({isActive}) => (
+                isActive 
+                ? {
+                  textDecoration: 'none',
+                  color: '#1b4297'
+                  }
+                :{}
+                )}
+            to="/" end>My Tasks</NavLink>
           <NavLink  className="nav__link"
               style={
               ({isActive}) => (
@@ -79,6 +65,20 @@ const Navigation = () => {
               }
           to="/Metrics" >
             Metrics
+          </NavLink>
+          <NavLink   className="nav__link"
+              style={
+              ({isActive}) => (
+                isActive 
+                ? {
+                  textDecoration: 'none',
+                  color: '#1b4297'
+                  }
+                :{}
+                )
+              }
+          to="/Admin">
+            Settings
           </NavLink>
         </div> 
       </nav>

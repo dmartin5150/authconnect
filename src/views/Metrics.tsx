@@ -172,17 +172,18 @@ const Metrics = () => {
     const [gridApi, setGridApi] = useState<GridApi | undefined>();
     const [rowData, setRowData] = useState<GroupMetric[]>([]);
     const [columnDefs, setColDefs]=  useState<ColDef[]> ([
-        {headerName: 'User Name', field: 'userName', flex:0.8},
+        {headerName: 'User Name', field: 'userName', flex:0.8,
+            cellRenderer:BoldColumn},
         {headerName: 'Not Started', field: 'notStartedCount', flex:0.8},
         {headerName: 'Pending', field: 'pendingCount', flex:0.5},
         {headerName: 'Completed', field: 'completedCount', flex:0.7},
-        {headerName: 'Scheduled', field: 'scheduledCount',flex:0.6},
         {headerName: 'Not Scheduled', field: 'notScheduledCount',flex:0.6},
-        {headerName: 'Auth Totals', field: 'authTotals',flex:0.6},
-        {headerName: 'Auth Totals', field: 'authTotals',flex:0.6,
+        {headerName: 'Scheduled', field: 'scheduledCount',flex:0.6},
+        // {headerName: 'Auth Totals', field: 'authTotals',flex:0.6},
+        {headerName: 'Total Group Orders', field: 'authTotals',flex:0.6,
             cellRenderer:BoldColumn},
-        {headerName: 'Scheduled Totals', field: 'scheduledTotals',flex:0.6,
-        cellRenderer:BoldColumn},
+        // {headerName: 'Scheduled Totals', field: 'scheduledTotals',flex:0.6,
+        // cellRenderer:BoldColumn},
     ]);
 
 
@@ -232,8 +233,8 @@ const Metrics = () => {
                     <h4 className ="status-heading">Scheduled ({scheduled})</h4>
                 </div>
                 <div className='status-group' >
-                    <label className='status-group-label'>Current Group:</label>
-                    <GroupDropdown groups={groups} includeUnassigned={true} />
+                    <label className='status-group-label'><b>Current Group:</b></label>
+                    <GroupDropdown groups={groups} includeUnassigned={false} />
                 </div>
             </div>
             {/* {noteInfo.classIsOpen && <CreateNote heading='Action Note:' messageText='' classIsOpen={noteInfo.classIsOpen} />} */}

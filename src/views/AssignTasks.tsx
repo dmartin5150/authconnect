@@ -84,6 +84,9 @@ const AssignTasks = () => {
     },[authStatusInfo])
  
 
+
+
+
     const getGroupOrders = (orders:Order[]) => {
         let groupOrders= orders.map((order) => {
             const providerIndex = curGroup.departmentIds.indexOf(order.departmentId);
@@ -248,7 +251,7 @@ const AssignTasks = () => {
                 </div>
                 <div className='status-group' >
                     <label className='status-group-label'>Current Group:</label>
-                    <GroupDropdown groups={groups}includeUnassigned={true} />
+                    <GroupDropdown groups={groups}includeUnassigned={false} />
                 </div>
             </div>
             {noteInfo.classIsOpen && <CreateNote heading='Action Note:' messageText=''  classIsOpen={noteInfo.classIsOpen} />}
